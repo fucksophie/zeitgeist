@@ -10,13 +10,15 @@ export default function (player: Player, client: Client, args: string[])  {
             client.message("Missing argument.")
             return;
         }
-        
+
         if(dRoom.banned.includes(args[0])) {
             client.message("User " + args[0] + " has been unbanned.")
             dRoom.banned = dRoom.banned.filter(e => e != args[0]);
         } else {
             client.message("User " + args[0] + " is not banned.")
         }
+
+        localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
     } else {
         client.message("You do not have permission!");
     }

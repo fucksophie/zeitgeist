@@ -39,6 +39,15 @@ const mClient = (client: Client) => {
         }
     })
 
+    client.on("join", (player) => {
+        if(client.me.crown) {
+            const dRoom: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!)
+            if(dRoom.banned.includes(player._id)) {
+                client.kickban(player._id, 0)
+            }
+        }
+    })
+
     client.on("message", (player: Player, message: string) => {
         if(!localStorage.getItem(client.wsUrl+player.id)) {
             localStorage.setItem(client.wsUrl+player.id, JSON.stringify({id: client.wsUrl+player.id, money: 0, rank: "", items: [], timeouts: []}))

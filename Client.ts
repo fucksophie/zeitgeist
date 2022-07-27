@@ -2,6 +2,7 @@ import {EventEmitter} from "https://deno.land/x/eventemitter@1.2.1/mod.ts"
 
 export class Player {
     id!: string
+    _id!: string
     name!: string
     color!: string
     
@@ -113,13 +114,21 @@ export class Client extends EventEmitter<{
                 } else if(message.m == "ch") {
 
                     if(message.ch.crown) {
-                        this.me.crown = message.ch.crown.userId == this.me.id
+                        this.me.crown = message.ch.crown.userId == this.me._id                        
                     } else {
                         this.me.crown = false
                     }
-    
+                    
+                    if(this.me.crown) {
+                        message.ppl.forEach((e: Player) => {
+                            this.emit("join", e)
+                        })
+                    }
+                    
                     if(this.people.length !== 0) return;
+                    
                     this.emit("connect");
+                    
                     console.log("Joined channel " + channel + ". People: " + message.ppl.length)
                     this.people = message.ppl;
                 } else if(message.m == "p") {

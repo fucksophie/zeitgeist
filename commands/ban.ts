@@ -10,7 +10,7 @@ export default function (player: Player, client: Client, args: string[])  {
             client.message("Missing argument.")
             return;
         }
-
+        
         const user = client.people.find(e =>
             e.id == args[0]
         );
@@ -23,6 +23,8 @@ export default function (player: Player, client: Client, args: string[])  {
         }
 
         dRoom.banned.push(args[0]); 
+
+        localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
     } else {
         client.message("You do not have permission!");
     }
