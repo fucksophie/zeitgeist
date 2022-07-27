@@ -20,17 +20,17 @@ export default function (player: Player, client: Client, args: string[])  {
                     return;
                 } 
 
-                dRoom.owners.push(rawPlayer.id);
+                dRoom.owners.push(args[0]);
 
                 localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
 
-                client.message(rawPlayer.id + " is now a room owner.");
+                client.message(args[0] + " is now a room owner.");
             } else if(args[1] == "room-operator") {
-                dRoom.operators.push(rawPlayer.id);
+                dRoom.operators.push(args[0]);
 
                 localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
 
-                client.message(rawPlayer.id + " is now a room operator.");
+                client.message(args[0] + " is now a room operator.");
             } else {
                 client.message("Available ranks: room-operator, room-owner (only usable by Bot Owners)")
             }
