@@ -237,7 +237,7 @@ const mClient = (client: Client) => {
                     if(item) {
                         item.amount += 1;
                     } else {
-                        dPlayer.items.push({...e, amount: 0})
+                        dPlayer.items.push({...e, amount: 1})
                     }
                 })
 
