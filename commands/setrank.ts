@@ -4,7 +4,7 @@ import { DatabasePlayer, DatabaseRoom, getDRoom, setDRoom } from "../Database.ts
 export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
     const dRoom: DatabaseRoom = getDRoom(client)!;
-    console.log(dRoom.ranks)
+
     if(dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner") {
         if(args.length < 2) {
             client.message("Missing arguments (2).")
