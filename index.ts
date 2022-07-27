@@ -36,15 +36,7 @@ const mClient = (client: Client) => {
         client.userset("[p] AppleBot 🍎", "#ff0000");
 
         if(!localStorage.getItem("room_"+client.wsUrl+client.channel)) {
-            localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify({name: client.channel, banned: [], operators: []}))
-        } else { // TODO: backwards compatabillity removal
-            const response: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!);
-            if(!response.owners) {
-                console.log("backcompat: " + client.channel)
-
-                response.owners = []
-            }
-            localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(response))
+            localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify({name: client.channel, owners: [], banned: [], operators: []}))
         }
     })
 
