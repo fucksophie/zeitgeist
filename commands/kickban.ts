@@ -20,8 +20,8 @@ export default function (player: Player, client: Client, args: string[])  {
             return;
         }
 
-        if((+args[1]) > 60) {
-            client.message("Max kickban time is 60 minutes.");
+        if((+args[1]) > 300) {
+            client.message("Max kickban time is 300 minutes.");
             return;
         }
 
