@@ -72,7 +72,7 @@ export class Client extends EventEmitter<{
             id
         })
     }
-    
+
     kickban(id: string, time: number) {
         this.send({
             m: "kickban",
@@ -119,6 +119,9 @@ export class Client extends EventEmitter<{
                     this.send({m: "ch", "_id": channel})
                     this.me = message.u;
                 } else if(message.m == "ch") {
+                    if(this.people.length == 0) {
+                        this.emit("connect");
+                    }
 
                     if(message.ch.crown) {
                         this.me.crown = message.ch.crown.userId == this.me._id                        
@@ -133,9 +136,7 @@ export class Client extends EventEmitter<{
                     }
                     
                     if(this.people.length !== 0) return;
-                    
-                    this.emit("connect");
-                    
+                                        
                     console.log("Joined channel " + channel + ". People: " + message.ppl.length)
                     this.people = message.ppl;
                 } else if(message.m == "p") {

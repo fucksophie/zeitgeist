@@ -1,5 +1,5 @@
 import { Client, Player } from "../Client.ts";
-import { DatabasePlayer } from "../index.ts";
+import { DatabasePlayer } from "../Database.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);

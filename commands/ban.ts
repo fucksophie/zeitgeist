@@ -1,11 +1,11 @@
 import { Client, Player } from "../Client.ts";
-import { DatabasePlayer, DatabaseRoom } from "../index.ts";
+import { DatabasePlayer, DatabaseRoom, getDRoom, setDRoom } from "../Database.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
-    const dRoom: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!)
+    const dRoom: DatabaseRoom = getDRoom(client)!;
 
-    if(dRoom.operators.includes(player.id) || dRoom.owners.includes(player.id) || dPlayer.rank == "bot-owner") {
+    if(dRoom.ranks.get(player.id) == "room-operator" || dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner") {
         if(!args[0]) {
             client.message("Missing argument.")
             return;
@@ -17,14 +17,14 @@ export default function (player: Player, client: Client, args: string[])  {
 
         if(user) {
             client.message("User " + user.name + " banned.")
-            client.kickban(args[0], 0)
+            client.kickban(args[0], 1.8e+6)
         } else {
             client.message("Offline user " + args[0] + " banned.")
         }
 
-        dRoom.banned.push(args[0]); 
+        dRoom.ranks.set(args[0], "banned"); 
 
-        localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
+        setDRoom(dRoom, client);
     } else {
         client.message("You do not have permission!");
     }

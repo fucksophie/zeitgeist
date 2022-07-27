@@ -1,11 +1,11 @@
 import { Client, Player } from "../Client.ts";
-import { DatabasePlayer, DatabaseRoom } from "../index.ts";
+import { DatabasePlayer, DatabaseRoom, getDRoom, setDRoom } from "../Database.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
-    const dRoom: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!)
-
-    if(dRoom.owners.includes(player.id) || dPlayer.rank == "bot-owner") {
+    const dRoom: DatabaseRoom = getDRoom(client)!;
+    console.log(dRoom.ranks)
+    if(dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner") {
         if(args.length < 2) {
             client.message("Missing arguments (2).")
             return;
@@ -18,49 +18,57 @@ export default function (player: Player, client: Client, args: string[])  {
                 if(dPlayer.rank !== "bot-owner") {
                     client.message("Only bot owners may make other people room owners.")
                     return;
-                } 
+                }  
 
-                if(dRoom.banned.includes(args[0])) {
+                if(dRoom.ranks.get(args[0]) == "banned") {
                     client.message("User is banned.")
                     return;
                 }
 
-                if(dRoom.owners.includes(args[0])) {
-                    client.message("User is already a room owner!");
-                    return;
-                }
+                dRoom.ranks.set(args[0], "room-owner");
 
-                if(dRoom.operators.includes(args[0])) {
-                    dRoom.operators = dRoom.operators.filter(e => e !== args[0])
-                }
-                
-                dRoom.owners.push(args[0]);
-
-                localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
+                setDRoom(dRoom, client);
 
                 client.message(args[0] + " is now a room owner.");
             } else if(args[1] == "room-operator") {
-                if(dRoom.operators.includes(args[0])) {
-                    client.message("User is already a room operator!");
-                    return;
-                }
 
-                if(dRoom.banned.includes(args[0])) {
+                if(dRoom.ranks.get(args[0]) == "banned") {
                     client.message("User is banned.")
                     return;
                 }
 
-                if(dRoom.owners.includes(args[0])) {
-                    dRoom.owners = dRoom.owners.filter(e => e !== args[0])
+                dRoom.ranks.set(args[0], "room-operator");
+
+                setDRoom(dRoom, client);    
+                    
+                client.message(args[0] + " is now a room operator.");
+            }  else if(args[1] == "none") {
+                if(dRoom.ranks.get(player.id) == "room-operator") {
+                    client.message("You cannot derank another person.")
+                    return;
+                }  
+
+                if(dRoom.ranks.get(player.id) == "room-owner") {
+                    if(dRoom.ranks.get(args[0]) !== "room-operator") {
+                        client.message("You cannot derank this person.")
+                    } else {
+                        dRoom.ranks.delete(args[0]);
+        
+                        setDRoom(dRoom, client);    
+                            
+                        client.message(args[0] + " is now rankless.");
+                    }
                 }
 
-                dRoom.operators.push(args[0]);
-
-                localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(dRoom));
-
-                client.message(args[0] + " is now a room operator.");
+                if(dPlayer.rank == "bot-owner") {
+                    dRoom.ranks.delete(args[0]);
+        
+                    setDRoom(dRoom, client);    
+                        
+                    client.message(args[0] + " is now rankless.");
+                }
             } else {
-                client.message("Available ranks: room-operator, room-owner (only usable by Bot Owners)")
+                client.message("Available ranks: none (only usable by Bot Owners and by Room Owners (if deranking Operator)), room-operator, room-owner (only usable by Bot Owners)")
             }
         } else {
             client.message("Player does not exist. (in Database)")
