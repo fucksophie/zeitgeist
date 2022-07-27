@@ -42,9 +42,7 @@ export default function (player: Player, client: Client, args: string[])  {
             localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
         } 
 
-        console.log(match)
         match = itemRegex.exec(all);
-    
     }
 
     if(!found) {
