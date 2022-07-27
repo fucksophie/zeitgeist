@@ -29,6 +29,8 @@ export class Client extends EventEmitter<{
     people: Player[] = [];
     channel!: string;
     alive = false;
+    
+    // 🦋 🐛 🐝 🐞 🐜 🕷 🕸 🦂 🦗 🦟.
 
     // deno-lint-ignore no-explicit-any
     private send(array: Record<string, any>) {
