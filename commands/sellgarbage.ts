@@ -18,6 +18,8 @@ export default function (player: Player, client: Client)  {
         }
     })
     
+    dPlayer.money += total;
+
     localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
     
     client.message(`@${player.id} sold: ${final.join(", ")}. +${total}$#.`)
