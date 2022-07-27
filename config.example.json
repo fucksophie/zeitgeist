@@ -1,0 +1,14 @@
+{
+    "servers": [
+        {
+            "url": "wss://mppclone.com:8443",
+            "token": "token lapis give u",
+            "rooms": ["lobby"]
+        },
+        {
+            "url": "wss://mpp-ws.141.lv/", 
+            "token": "token yf gives u",
+            "rooms": ["lobby"]
+        }
+    ]
+}
