@@ -29,7 +29,7 @@ export class Client extends EventEmitter<{
     people: Player[] = [];
     channel!: string;
     alive = false;
-    
+
     // 🦋 🐛 🐝 🐞 🐜 🕷 🕸 🦂 🦗 🦟.
 
     // deno-lint-ignore no-explicit-any
@@ -101,8 +101,9 @@ export class Client extends EventEmitter<{
         this.ws = new WebSocket(this.wsUrl);
 
         this.ws.addEventListener("open", () => {
-            this.send({"m":"hi", "token": token})
             this.alive = true;
+
+            this.send({"m":"hi", "token": token})
         })
 
         this.ws.addEventListener("close", (r) => {
