@@ -68,7 +68,7 @@ export class Client extends EventEmitter<{
 
     findUser(idorname: string) {
         return this.people.find(e =>
-            e.id == idorname || e.name.startsWith(idorname) || e.name.includes(idorname)
+            e.id == idorname || e.name.toLowerCase().includes(idorname.toLowerCase())
         )
     }
 
