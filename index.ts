@@ -23,9 +23,9 @@ for await (const dirEntry of Deno.readDir("commands")) {
 const mClient = (client: Client) => {
     client.on("connect", () => {
         client.userset("[p] AppleBot 🍎", "#ff0000");
-        //if(!getDRoom(client)) {
+        if(!getDRoom(client)) {
             setDRoom({ranks: new Map()}, client);
-        //}
+        }
     })
 
     client.on("join", (player) => {
