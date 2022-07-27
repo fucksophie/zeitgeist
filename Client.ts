@@ -87,6 +87,13 @@ export class Client extends EventEmitter<{
         })
     }
 
+    unban(id: string) {
+        this.send({
+            m: "unban",
+            _id: id
+        });
+    }
+
     boot(wsUrl:string, token: string, channel: string) {        
         this.wsUrl = wsUrl;
         this.channel = channel;

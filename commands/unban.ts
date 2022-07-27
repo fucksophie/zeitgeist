@@ -15,7 +15,8 @@ export default function (player: Player, client: Client, args: string[])  {
             client.message("User " + args[0] + " has been unbanned.")
             dRoom.ranks.delete(args[0]);
         } else {
-            client.message("User " + args[0] + " is not banned.")
+            client.message("User " + args[0] + " is not banned. (If banned via kickban, try rejoining.)")
+            client.unban(args[0]);
         }
 
         localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(
