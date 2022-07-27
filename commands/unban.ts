@@ -5,7 +5,7 @@ export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
     const dRoom: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!)
 
-    if(dRoom.operators.includes(client.wsUrl+player.id) || dPlayer.rank == "room-owner" || dPlayer.rank == "bot-owner") {
+    if(dRoom.operators.includes(player.id) || dRoom.owners.includes(player.id) || dPlayer.rank == "bot-owner") {
         if(!args[0]) {
             client.message("Missing argument.")
             return;

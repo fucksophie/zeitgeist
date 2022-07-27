@@ -17,8 +17,9 @@ export interface DatabasePlayer {
 
 export interface DatabaseRoom {
     operators: string[],
-    banned: string[]
-    name: string
+    owners: string[],
+    banned: string[],
+    name: string,
 }
 
 // deno-lint-ignore no-explicit-any
@@ -36,6 +37,14 @@ const mClient = (client: Client) => {
 
         if(!localStorage.getItem("room_"+client.wsUrl+client.channel)) {
             localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify({name: client.channel, banned: [], operators: []}))
+        } else { // TODO: backwards compatabillity removal
+            const response: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!);
+            if(!response.owners) {
+                console.log("backcompat: " + client.channel)
+
+                response.owners = []
+            }
+            localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(response))
         }
     })
 
