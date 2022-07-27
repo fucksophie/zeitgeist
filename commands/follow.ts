@@ -13,6 +13,11 @@ export default function (player: Player, client: Client, args: string[])  {
         })
     }   
 
+
+    if(client.me._id == args[0]) {
+        client.message("Infnite loop, cannot be possible. Bye.");
+        return;
+    }
     if(args?.[0]) {
         const f = client.findUser(args[0]);
 

@@ -14,6 +14,12 @@ export default function (player: Player, client: Client, args: string[])  {
         const rawPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+args[0])!);
 
         if(rawPlayer) {
+
+            if(client.me._id == args[0]) {
+                client.message("You cannot setrank the bot!");
+                return;
+            }
+            
             if(args[1] == "room-owner") {
                 if(dPlayer.rank !== "bot-owner") {
                     client.message("Only bot owners may make other people room owners.")

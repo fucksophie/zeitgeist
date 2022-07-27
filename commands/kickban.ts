@@ -15,6 +15,7 @@ export default function (player: Player, client: Client, args: string[])  {
             e.id == args[0]
         );
         
+    
         if(isNaN(+args[1])) {
             client.message(args[1] + " is not a number.")
             return;
@@ -26,6 +27,10 @@ export default function (player: Player, client: Client, args: string[])  {
         }
 
         if(user) {
+            if(user._id == client.me._id) {
+                client.message("You cannot kickban the bot!");
+                return;
+            }
             client.kickban(args[0], (+args[1])*60000);
         }
     } else {

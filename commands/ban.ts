@@ -15,6 +15,11 @@ export default function (player: Player, client: Client, args: string[])  {
             e.id == args[0]
         );
 
+        if(args[0] == client.me._id) {
+            client.message("You cannot kickban the bot!");
+            return;
+        }
+        
         if(user) {
             client.message("User " + user.name + " banned.")
             client.kickban(args[0], 1.8e+6)
