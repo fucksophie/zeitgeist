@@ -17,13 +17,14 @@ export class Player {
 export class Client extends EventEmitter<{
     connect(): void
     message(player: Player, message: string): void
+    join(player: Player): void
     mouse(x: number, y: number, id: string): void
 }> {
     wsUrl!: string
     ws!: WebSocket;
     me!: Player;
     people: Player[] = [];
-
+    channel!: string;
     // deno-lint-ignore no-explicit-any
     private send(array: Record<string, any>) {
         this.ws.send(JSON.stringify(
@@ -58,18 +59,29 @@ export class Client extends EventEmitter<{
 
     findUser(idorname: string) {
         return this.people.find(e =>
-            e.id == idorname || e.name.startsWith(idorname)
+            e.id == idorname || e.name.startsWith(idorname) || e.name.includes(idorname)
         )
+    }
+
+    kickban(id: string, time: number) {
+        this.send({
+            m: "kickban",
+            _id: id,
+            ms: time
+        })
     }
 
     boot(wsUrl:string, token: string, channel: string) {        
         this.wsUrl = wsUrl;
+        this.channel = channel;
+
         const tInterval = setInterval(() => {
             this.send({
                 m: "t",
                 e: Date.now()
             })
         }, 15000)
+
         this.ws = new WebSocket(this.wsUrl);
 
         this.ws.addEventListener("open", () => {
@@ -97,6 +109,7 @@ export class Client extends EventEmitter<{
                     this.send({m: "ch", "_id": channel})
                     this.me = message.u;
                 } else if(message.m == "ch") {
+                    if(this.people.length !== 0) return;
                     this.emit("connect");
                     console.log("Joined channel " + channel + ". People: " + message.ppl.length)
                     this.people = message.ppl;
@@ -108,6 +121,8 @@ export class Client extends EventEmitter<{
                     }
 
                     this.people.push(message);
+
+                    this.emit("join", message)
                 } else if(message.m == "bye") {
                     this.people = this.people.filter(e => e.id !== message.p)
                 } else if(message.m == "a") {
