@@ -1,17 +1,20 @@
 import { Client, Player } from "../Client.ts";
-import { DatabasePlayer } from "../Database.ts";
+import { DatabasePlayer, DatabaseRoom, getDRoom } from "../Database.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
+    const dRoom: DatabaseRoom = getDRoom(client)!;
+
     if(args?.[0]) {
         const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+args[0])!);
+
         if(dPlayer) {
-            client.message(args[0] + "'s rank is: " + dPlayer.rank)
+            client.message(args[0] + "'s rank is: " + (dPlayer.rank ||"(none)")+ ". Room rank: " + (dRoom.ranks.get(args[0]) || "(none)"))
         } else {
             client.message("Player does not exist.")
         }
     } else {
         const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
 
-        client.message("Your rank is: " + dPlayer.rank + " PS. you got epicly pranked")
+        client.message(args[0] + "'s rank is: " + (dPlayer.rank ||"(none)")+ ". Room rank: " + (dRoom.ranks.get(args[0]) || "(none)"))
     }
 }
