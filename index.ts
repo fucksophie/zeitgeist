@@ -22,11 +22,10 @@ for await (const dirEntry of Deno.readDir("commands")) {
 
 const mClient = (client: Client) => {
     client.on("connect", () => {
-        client.userset("[x] AppleBotxxxx 🍎", "#ff0000");
-        if(!getDRoom(client)) {
-            console.log('setting new room')
+        client.userset("[p] AppleBot 🍎", "#ff0000");
+        //if(!getDRoom(client)) {
             setDRoom({ranks: new Map()}, client);
-        }
+        //}
     })
 
     client.on("join", (player) => {
@@ -47,7 +46,7 @@ const mClient = (client: Client) => {
         const args = message.split(" ")
         const command = args.shift();
 
-        if(command?.startsWith("x")) {
+        if(command?.startsWith("p")) {
             const cc = commands.get(command.substring(1))
             if(cc) cc(player, client, args, commands)
         }
