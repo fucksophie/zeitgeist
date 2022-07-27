@@ -2,7 +2,7 @@ import { Client, Player } from "../Client.ts";
 import { DatabasePlayer } from "../index.ts";
 
 export default function (player: Player, client: Client)  {
-    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(player.id)!);
+    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
 
     if(!dPlayer.items.find(e => e.name == "basketball")) {
         client.message(`@${player.id} AYO WHERE YOUR BASKETBALL AT`)

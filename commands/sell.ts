@@ -2,7 +2,7 @@ import { Client, Player } from "../Client.ts";
 import { DatabasePlayer } from "../index.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
-    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(player.id)!);
+    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
 
     const all = args.join(" ")
     const itemRegex = /\[([^[\]]*) x(\d*)\]/gm;

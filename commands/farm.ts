@@ -33,7 +33,7 @@ const FarmItems = [
 ]
 
 export default function (player: Player, client: Client)  {
-    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(player.id)!);
+    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
 
     if(dPlayer.timeouts.includes("farm")) {
         client.message(`@${player.id} can't farrrmmmm, twooo placess.. at the same.. time...`)

@@ -15,6 +15,12 @@ export interface DatabasePlayer {
     items: {name: string, cost: number, amount: number, garbage: boolean}[]
 }
 
+export interface DatabaseRoom {
+    operators: string[],
+    banned: string[]
+    name: string
+}
+
 // deno-lint-ignore no-explicit-any
 const commands = new Map<string, any>();
 
@@ -27,13 +33,17 @@ for await (const dirEntry of Deno.readDir("commands")) {
 const mClient = (client: Client) => {
     client.on("connect", () => {
         client.userset("[p] AppleBot 🍎", "#ff0000");
+
+        if(!localStorage.getItem("room_"+client.wsUrl+client.channel)) {
+            localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify({name: client.channel, banned: [], operators: []}))
+        }
     })
 
     client.on("message", (player: Player, message: string) => {
-        if(!localStorage.getItem(player.id)) {
-            localStorage.setItem(player.id, JSON.stringify({id: player.id, money: 0, rank: "", items: [], timeouts: []}))
+        if(!localStorage.getItem(client.wsUrl+player.id)) {
+            localStorage.setItem(client.wsUrl+player.id, JSON.stringify({id: client.wsUrl+player.id, money: 0, rank: "", items: [], timeouts: []}))
         }
-        
+
         const args = message.split(" ")
         const command = args.shift();
 
