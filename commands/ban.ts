@@ -16,14 +16,25 @@ export default function (player: Player, client: Client, args: string[])  {
         );
 
         if(args[0] == client.me._id) {
-            client.message("You cannot kickban the bot!");
+            client.message("You cannot ban the bot!");
             return;
         }
         
+
         if(user) {
+            if(dRoom.ranks.get(args[0]) != "" || JSON.parse(localStorage.getItem(client.wsUrl+user._id)!).rank == "bot-owner") {
+                client.message("You cannot ban ranked players!");
+                return;
+            }
+            
             client.message("User " + user.name + " banned.")
             client.kickban(args[0], 1.8e+6)
         } else {
+            if(dRoom.ranks.get(args[0]) != "" || JSON.parse(localStorage.getItem(client.wsUrl+args[0])!).rank == "bot-owner") {
+                client.message("You cannot ban ranked players!");
+                return;
+            }
+
             client.message("Offline user " + args[0] + " banned.")
         }
 
