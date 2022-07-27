@@ -11,6 +11,7 @@ export default function (player: Player, client: Client)  {
         }
 
         client.giveCrown(player.id);
+        client.message("The crown is now yours.");
     } else {
         client.message("You do not have permission!");
     }
