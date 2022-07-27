@@ -32,11 +32,11 @@ export default function (player: Player, client: Client, args: string[])  {
                 return;
             }
 
-            if(dRoom.ranks.get(user._id) != "" || JSON.parse(localStorage.getItem(client.wsUrl+user._id)!).rank == "bot-owner") {
+            if(dRoom.ranks.get(user._id) || JSON.parse(localStorage.getItem(client.wsUrl+user._id)!).rank == "bot-owner") {
                 client.message("You cannot kickban ranked players!");
                 return;
             }
-            
+
 
             client.kickban(args[0], (+args[1])*60000);
         }
