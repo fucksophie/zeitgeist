@@ -32,7 +32,7 @@ for await (const dirEntry of Deno.readDir("commands")) {
 
 const mClient = (client: Client) => {
     client.on("connect", () => {
-        client.userset("[p] AppleBot 🍎", "#ff0000");
+        client.userset("[x] XppleXot 🥚", "#00ff00");
 
         if(!localStorage.getItem("room_"+client.wsUrl+client.channel)) {
             localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify({name: client.channel, banned: [], operators: []}))
@@ -47,7 +47,7 @@ const mClient = (client: Client) => {
         const args = message.split(" ")
         const command = args.shift();
 
-        if(command?.startsWith("p")) {
+        if(command?.startsWith("x")) {
             const cc = commands.get(command.substring(1))
             if(cc) cc(player, client, args, commands)
         }

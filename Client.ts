@@ -9,6 +9,8 @@ export class Player {
         text: string
         color: string
     }
+    
+    crown?: boolean
 
     x = 0
     y = 0
@@ -109,6 +111,13 @@ export class Client extends EventEmitter<{
                     this.send({m: "ch", "_id": channel})
                     this.me = message.u;
                 } else if(message.m == "ch") {
+
+                    if(message.ch.crown) {
+                        this.me.crown = message.ch.crown.userId == this.me.id
+                    } else {
+                        this.me.crown = false
+                    }
+    
                     if(this.people.length !== 0) return;
                     this.emit("connect");
                     console.log("Joined channel " + channel + ". People: " + message.ppl.length)

@@ -6,7 +6,7 @@ export default function (player: Player, client: Client, args: string[])  {
 
     if(dPlayer.rank == "bot-owner") {
         try {
-            const output = eval(args.join(""))
+            const output = eval(args.join(" "))
             client.message("Output: " + output)
         } catch(e) {
             client.message("Error: " + e)

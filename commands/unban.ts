@@ -10,19 +10,13 @@ export default function (player: Player, client: Client, args: string[])  {
             client.message("Missing argument.")
             return;
         }
-
-        const user = client.people.find(e =>
-            e.id == args[0]
-        );
-
-        if(user) {
-            client.message("User " + user.name + " banned.")
-            client.kickban(args[0], 0)
+        
+        if(dRoom.banned.includes(args[0])) {
+            client.message("User " + args[0] + " has been unbanned.")
+            dRoom.banned = dRoom.banned.filter(e => e != args[0]);
         } else {
-            client.message("Offline user " + args[0] + " banned.")
+            client.message("User " + args[0] + " is not banned.")
         }
-
-        dRoom.banned.push(args[0]); 
     } else {
         client.message("You do not have permission!");
     }
