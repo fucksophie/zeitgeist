@@ -28,11 +28,15 @@ export class Client extends EventEmitter<{
     me!: Player;
     people: Player[] = [];
     channel!: string;
+    alive = false;
+
     // deno-lint-ignore no-explicit-any
     private send(array: Record<string, any>) {
-        this.ws.send(JSON.stringify(
-            [array]
-        ))
+        if(this.alive) {
+            this.ws.send(JSON.stringify(
+                [array]
+            ))
+        }
     }
 
     userset(name: string|undefined, color: string|undefined) {
@@ -96,17 +100,24 @@ export class Client extends EventEmitter<{
 
         this.ws.addEventListener("open", () => {
             this.send({"m":"hi", "token": token})
+            this.alive = true;
         })
+
         this.ws.addEventListener("close", (r) => {
             console.log(r)
+            this.alive = false;
+            
             clearInterval(tInterval)
             setTimeout(() => {
                 this.boot(wsUrl, token, channel);
             }, 10000);
         })
+        
         this.ws.addEventListener("error", e => {
             console.log(e)
             clearInterval(tInterval)
+            this.alive = false;
+
             setTimeout(() => {
                 this.boot(wsUrl, token, channel);
             }, 10000);
