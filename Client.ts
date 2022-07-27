@@ -66,6 +66,13 @@ export class Client extends EventEmitter<{
         )
     }
 
+    giveCrown(id: string) {
+        this.send({
+            m: "chown",
+            id
+        })
+    }
+    
     kickban(id: string, time: number) {
         this.send({
             m: "kickban",
