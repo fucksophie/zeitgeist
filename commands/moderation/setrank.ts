@@ -1,5 +1,5 @@
-import { Client, Player } from "../Client.ts";
-import { DatabasePlayer, DatabaseRoom, getDRoom, setDRoom } from "../Database.ts";
+import { Client, Player } from "../../classes/Client.ts";
+import { DatabasePlayer, DatabaseRoom, getDRoom, setDRoom } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[])  {
     const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);

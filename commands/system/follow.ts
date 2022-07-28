@@ -1,4 +1,4 @@
-import { Client, Player } from "../Client.ts";
+import { Client, Player } from "../../classes/Client.ts";
 let currentlyFollowing = "";
 let firstRun = false;
 

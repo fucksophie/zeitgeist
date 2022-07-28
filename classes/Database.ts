@@ -14,7 +14,7 @@ export interface DatabaseRoom {
 
 export function getDRoom(client: Client): DatabaseRoom|undefined {
     const room: DatabaseRoom = JSON.parse(localStorage.getItem("room_"+client.wsUrl+client.channel)!)
-    
+    JSON.parse(localStorage.getItem("room_wss://mppclone.com:8443The Roleplay Room")!)
     if(!room) {
         return;
     }

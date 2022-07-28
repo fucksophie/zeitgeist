@@ -1,5 +1,5 @@
-import { Client, Player } from "../Client.ts";
-import { DatabasePlayer } from "../Database.ts";
+import { Client, Player } from "../../classes/Client.ts";
+import { DatabasePlayer } from "../../classes/Database.ts";
 
 // deno-lint-ignore no-explicit-any
 function fyShuffle(arr: any[]) {

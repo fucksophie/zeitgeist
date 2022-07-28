@@ -1,8 +1,8 @@
-import { Client, Multiclient, Player } from "./Client.ts";
+import { Client, Multiclient, Player } from "./classes/Client.ts";
 import config from "./config.json" assert { type: "json" }
-import { getDRoom, setDRoom } from "./Database.ts";
+import { getDRoom, setDRoom } from "./classes/Database.ts";
 
-for(let i = 0; i < localStorage.length; i++) { // clear all timeouts so no issues
+for(let i = 0; i < localStorage.length; i++) { 
     const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
     if(typeof player.money == "number") {
         player.timeouts = []
@@ -11,14 +11,17 @@ for(let i = 0; i < localStorage.length; i++) { // clear all timeouts so no issue
 }
 
 // deno-lint-ignore no-explicit-any
-const commands = new Map<string, any>();
+const categories = new Map<string, Map<string, any>>();
 
-for await (const dirEntry of Deno.readDir("commands")) {
-    commands.set(dirEntry.name.split(".")[0],
-     (await import("./commands/" + dirEntry.name)).default
-    )
+for await (const categoryEntry of Deno.readDir("commands")) {
+    if(categoryEntry.isDirectory) {
+        for await (const commandEntry of Deno.readDir("commands/" + categoryEntry.name)) {
+            const categoryMap = categories.get(categoryEntry.name) || new Map();
+            categoryMap.set(commandEntry.name.split(".")[0], (await import(`./commands/${categoryEntry.name}/${commandEntry.name}`)).default)
+            categories.set(categoryEntry.name, categoryMap);
+        }
+    }
 }
-
 
 const mClient = (client: Client) => {
     client.on("connect", () => {
@@ -46,8 +49,11 @@ const mClient = (client: Client) => {
         const command = args.shift();
 
         if(command?.startsWith("g")) {
-            const cc = commands.get(command.substring(1))
-            if(cc) cc(player, client, args, commands)
+            categories.forEach(v => {
+                const cc = v.get(command.substring(1));
+
+                if(cc) cc(player, client, args, categories)
+            })
         }
     })
 }
