@@ -29,6 +29,7 @@ export class Client extends EventEmitter<{
     people: Player[] = [];
     channel!: string;
     alive = false;
+    reconnectInterval = 0;
 
     // 🦋 🐛 🐝 🐞 🐜 🕷 🕸 🦂 🦗 🦟.
 
@@ -97,7 +98,7 @@ export class Client extends EventEmitter<{
     boot(wsUrl:string, token: string, channel: string) {        
         this.wsUrl = wsUrl;
         this.channel = channel;
-
+    
         const tInterval = setInterval(() => {
             this.send({
                 m: "t",
@@ -113,25 +114,26 @@ export class Client extends EventEmitter<{
             this.send({"m":"hi", "token": token})
         })
 
-        this.ws.addEventListener("close", (r) => {
-            console.log(r)
-            this.alive = false;
-            
+        this.ws.addEventListener("close", () => {
             clearInterval(tInterval)
-            setTimeout(() => {
-                this.boot(wsUrl, token, channel);
-            }, 10000);
-        })
-        
-        this.ws.addEventListener("error", e => {
-            console.log(e)
-            clearInterval(tInterval)
+            clearInterval(this.reconnectInterval)
             this.alive = false;
 
-            setTimeout(() => {
+            this.reconnectInterval = setTimeout(() => {
                 this.boot(wsUrl, token, channel);
-            }, 10000);
+            }, 1000);
         })
+        
+        this.ws.addEventListener("error", () => {
+            clearInterval(tInterval)
+            clearInterval(this.reconnectInterval)
+            this.alive = false;
+
+            this.reconnectInterval = setTimeout(() => {
+                this.boot(wsUrl, token, channel);
+            }, 1000);
+        })
+
         this.ws.addEventListener("message", (e) => {
             const json = JSON.parse(e.data);
             // deno-lint-ignore no-explicit-any
