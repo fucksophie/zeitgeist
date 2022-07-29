@@ -15,13 +15,15 @@ export class Discord {
     buffer: string[] = [];
     bufferTimeout = 0;
 
-    async makeNewBridge(ccc: Client) {
-        this.clients.push(ccc);
-        
+    async makeNewBridge(theClient: Client) {
+        this.clients.push(theClient);
+
         if(!this.bufferTimeout) {
             this.bufferTimeout = setInterval(() => {
                 if(this.buffer.length != 0) {
-                    this.channel?.send(this.buffer.join("\n"));
+                    this.channel?.send(this.buffer.join("\n"), {
+                        allowedMentions: { replied_user: false }
+                    });
                     this.buffer = []
                 }
             }, 250)

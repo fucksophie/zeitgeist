@@ -64,10 +64,10 @@ const mClient = (client: Client) => {
     client.on("message", (player: Player, message: string) => {
         if(discord && discord.channel && getDRoom(client)?.discordEnabled) {
             if(message.startsWith("[Discord]") && player._id == client.me._id) return;
-            discord.buffer.push(`**${player.name}** (${player._id}#**${client.channel}**@${getDomainWithoutSubdomain(client.wsUrl)}): ${message}`)
+            discord.buffer.push(`**${player.name}** (${player._id}): ${message} || ${client.channel} in ${getDomainWithoutSubdomain(client.wsUrl)} ||`)
         }
         
-        if(!localStorage.getItem(client.wsUrl+player.id)) {
+        if(!localStorage.getItem(client.wsUrl+player.id)) { 
             localStorage.setItem(client.wsUrl+player.id, JSON.stringify({id: client.wsUrl+player.id, money: 0, rank: "", items: [], timeouts: []}))
         }
 
