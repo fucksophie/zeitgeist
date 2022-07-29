@@ -47,6 +47,7 @@ export class Discord {
         
         client.on("message", (p, m) => {
             if(this.discord && this.channel) {
+                if(m.startsWith("[Discord]") && p._id == client.me._id) return;
                 this.buffer.push(`**${p.name}** (${p._id}): ${m}`)
             }
         })
