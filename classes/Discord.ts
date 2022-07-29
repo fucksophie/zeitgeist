@@ -47,7 +47,6 @@ export class Discord {
         
         client.on("message", (p, m) => {
             if(this.discord && this.channel) {
-                if(client.me._id == p._id) return;
                 this.buffer.push(`**${p.name}** (${p._id}): ${m}`)
             }
         })
