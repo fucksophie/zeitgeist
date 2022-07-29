@@ -37,7 +37,7 @@ for await (const categoryEntry of Deno.readDir("commands")) {
 
 const mClient = (client: Client) => {
     client.on("connect", async () => {
-        client.userset("Zeit[x]eist", "#F8F8FF");
+        client.userset("Zeit[g]eist", "#F8F8FF");
         let room = getDRoom(client);
 
         if(!room) {
@@ -74,7 +74,7 @@ const mClient = (client: Client) => {
         const args = message.split(" ")
         const command = args.shift();
 
-        if(command?.startsWith("x")) {
+        if(command?.startsWith("g")) {
             categories.forEach(async v => {
                 const cc = v.get(command.substring(1));
 
