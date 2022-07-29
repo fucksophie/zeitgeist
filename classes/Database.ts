@@ -10,6 +10,7 @@ export interface DatabasePlayer {
 
 export interface DatabaseRoom {
     ranks: Map<string, string>
+    discordEnabled?: boolean
 }
 
 export function getDRoom(client: Client): DatabaseRoom|undefined {
@@ -26,5 +27,5 @@ export function getDRoom(client: Client): DatabaseRoom|undefined {
 
 export function setDRoom(DR: DatabaseRoom, client: Client) {
     localStorage.setItem("room_"+client.wsUrl+client.channel, JSON.stringify(
-        {ranks: [...DR.ranks]}));
+        { ...DR, ranks: [...DR.ranks]}));
 }

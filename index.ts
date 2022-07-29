@@ -1,6 +1,9 @@
 import { Client, Multiclient, Player } from "./classes/Client.ts";
 import config from "./config.json" assert { type: "json" }
 import { getDRoom, setDRoom } from "./classes/Database.ts";
+import { Discord } from "./classes/Discord.ts";
+
+export const discord = new Discord();
 
 for(let i = 0; i < localStorage.length; i++) { 
     const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
@@ -24,12 +27,22 @@ for await (const categoryEntry of Deno.readDir("commands")) {
 }
 
 const mClient = (client: Client) => {
-    client.on("connect", () => {
-        client.userset("Zeit[g]eist", "#F8F8FF");
-        if(!getDRoom(client)) {
+    client.on("connect", async () => {
+        client.userset("Zeit[x]eist", "#F8F8FF");
+        let room = getDRoom(client);
+
+        if(!room) {
+            room = {ranks: new Map()};
+            
             setDRoom({ranks: new Map()}, client);
+        }   
+
+        if(room.discordEnabled) {
+            console.log("making new bridge")
+            await discord.makeNewBridge(client);
         }
     })
+
     client.on("join", (player) => {
         if(client.me.crown) {
             const dRoom = getDRoom(client)!;
@@ -48,11 +61,11 @@ const mClient = (client: Client) => {
         const args = message.split(" ")
         const command = args.shift();
 
-        if(command?.startsWith("g")) {
-            categories.forEach(v => {
+        if(command?.startsWith("x")) {
+            categories.forEach(async v => {
                 const cc = v.get(command.substring(1));
 
-                if(cc) cc(player, client, args, categories)
+                if(cc) await cc(player, client, args, categories, discord)
             })
         }
     })
