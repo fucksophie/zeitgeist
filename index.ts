@@ -3,6 +3,15 @@ import config from "./config.json" assert { type: "json" }
 import { getDRoom, setDRoom } from "./classes/Database.ts";
 import { Discord } from "./classes/Discord.ts";
 
+const getDomainWithoutSubdomain = (url: string) => {
+    const urlParts = new URL(url).hostname.split('.')
+  
+    return urlParts
+      .slice(0)
+      .slice(-(urlParts.length === 4 ? 3 : 2))
+      .join('.')
+}
+
 export const discord = new Discord();
 
 for(let i = 0; i < localStorage.length; i++) { 
@@ -28,7 +37,7 @@ for await (const categoryEntry of Deno.readDir("commands")) {
 
 const mClient = (client: Client) => {
     client.on("connect", async () => {
-        client.userset("Zeit[g]eist", "#F8F8FF");
+        client.userset("Zeit[x]eist", "#F8F8FF");
         let room = getDRoom(client);
 
         if(!room) {
@@ -38,7 +47,6 @@ const mClient = (client: Client) => {
         }   
 
         if(room.discordEnabled) {
-            console.log("making new bridge")
             await discord.makeNewBridge(client);
         }
     })
@@ -54,6 +62,11 @@ const mClient = (client: Client) => {
     })
 
     client.on("message", (player: Player, message: string) => {
+        if(discord && discord.channel && getDRoom(client)?.discordEnabled) {
+            if(message.startsWith("[Discord]") && player._id == client.me._id) return;
+            discord.buffer.push(`**${player.name}** (${player._id}#**${client.channel}**@${getDomainWithoutSubdomain(client.wsUrl)}): ${message}`)
+        }
+        
         if(!localStorage.getItem(client.wsUrl+player.id)) {
             localStorage.setItem(client.wsUrl+player.id, JSON.stringify({id: client.wsUrl+player.id, money: 0, rank: "", items: [], timeouts: []}))
         }
@@ -61,7 +74,7 @@ const mClient = (client: Client) => {
         const args = message.split(" ")
         const command = args.shift();
 
-        if(command?.startsWith("g")) {
+        if(command?.startsWith("x")) {
             categories.forEach(async v => {
                 const cc = v.get(command.substring(1));
 

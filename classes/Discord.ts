@@ -10,10 +10,14 @@ import {
 export class Discord {
     discord?: DiscordClient;
     channel?: TextChannel;
+    clients: Client[] = [];
+
     buffer: string[] = [];
     bufferTimeout = 0;
 
-    async makeNewBridge(client: Client) {
+    async makeNewBridge(ccc: Client) {
+        this.clients.push(ccc);
+        
         if(!this.bufferTimeout) {
             this.bufferTimeout = setInterval(() => {
                 if(this.buffer.length != 0) {
@@ -35,7 +39,9 @@ export class Discord {
                 if(msg.author.id == this.discord?.user?.id) return;
 
                 if(config.discord.id == msg.channelID) {
-                    client.message("[Discord] " + msg.author.tag + ": " + msg.content)
+                    this.clients.forEach(e => {
+                        e.message("[Discord] " + msg.author.tag + ": " + msg.content)
+                    })
                 }
             }) 
             
@@ -44,13 +50,6 @@ export class Discord {
                 GatewayIntents.GUILD_MESSAGES
             ])
         }
-        
-        client.on("message", (p, m) => {
-            if(this.discord && this.channel) {
-                if(m.startsWith("[Discord]") && p._id == client.me._id) return;
-                this.buffer.push(`**${p.name}** (${p._id}): ${m}`)
-            }
-        })
     }
 
 }

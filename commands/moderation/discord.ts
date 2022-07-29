@@ -9,9 +9,7 @@ export default async function (player: Player, client: Client, __: unknown, _: u
     if(dPlayer.rank == "bot-owner") {
         if(dRoom.discordEnabled) {
             dRoom.discordEnabled = false;
-
-            discord.discord?.close();
-            clearInterval(discord.bufferTimeout)
+            discord.clients = discord.clients.filter(e => e.ws !== client.ws)
         } else {
             dRoom.discordEnabled = true;
             await discord.makeNewBridge(client);
