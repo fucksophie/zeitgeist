@@ -21,7 +21,7 @@ export class Discord {
         if(!this.bufferTimeout) {
             this.bufferTimeout = setInterval(() => {
                 if(this.buffer.length != 0) {
-                    this.channel?.send(this.buffer.join("\n"), {
+                    this.channel?.send(this.buffer.join("\n").slice(0, 1999), {
                         allowedMentions: { replied_user: false }
                     });
                     this.buffer = []
