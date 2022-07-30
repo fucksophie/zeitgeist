@@ -1,53 +1,62 @@
 import { Client, Player } from "../../classes/Client.ts";
 import { DatabasePlayer } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client, args: string[])  {
-    const dPlayer: DatabasePlayer = JSON.parse(localStorage.getItem(client.wsUrl+player.id)!);
+export default function (player: Player, client: Client, args: string[]) {
+  const dPlayer: DatabasePlayer = JSON.parse(
+    localStorage.getItem(client.wsUrl + player.id)!,
+  );
 
-    const all = args.join(" ")
-    const itemRegex = /\[([^[\]]*) x(\d*)\]/gm;
-    let match = itemRegex.exec(all);
-    let found;
-    const final: [string, number][] = [];
+  const all = args.join(" ");
+  const itemRegex = /\[([^[\]]*) x(\d*)\]/gm;
+  let match = itemRegex.exec(all);
+  let found;
+  const final: [string, number][] = [];
 
-    while (match != null) {
+  while (match != null) {
+    const item = dPlayer.items.find((e) => e.name == match![1]);
 
-        const item = dPlayer.items.find(e => e.name == match![1]);
+    if (item) {
+      const count = +match[2];
 
-        if(item) {
-            const count = +match[2];
+      if (isNaN(count)) return;
 
-            if(isNaN(count)) return;
+      found = true;
 
-            found = true;
+      if (item.amount < count) {
+        client.message(
+          `@${player.id}, you cannot sell more than ${item.amount} of ${item.name}.`,
+        );
+        return;
+      }
+      if (count < 1) {
+        client.message(
+          `@${player.id}, you cannot sell less than 1 of ${item.name}.`,
+        );
+        return;
+      }
 
-            if(item.amount < count) {
-                client.message(`@${player.id}, you cannot sell more than ${item.amount} of ${item.name}.`);
-                return;
-            }
-            if(count < 1) {
-                client.message(`@${player.id}, you cannot sell less than 1 of ${item.name}.`);
-                return;
-            }
+      dPlayer.money += count * item.cost;
+      item.amount -= count;
 
-            dPlayer.money += count*item.cost;
-            item.amount -= count;
-            
-            if(item.amount == 0) {
-                dPlayer.items = dPlayer.items.filter(e => e.name !== item.name);
-            }
+      if (item.amount == 0) {
+        dPlayer.items = dPlayer.items.filter((e) => e.name !== item.name);
+      }
 
-            final.push([`${count} x${item.name}`, count*item.cost]);
-            
-            localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
-        } 
+      final.push([`${count} x${item.name}`, count * item.cost]);
 
-        match = itemRegex.exec(all);
+      localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
     }
 
-    if(!found) {
-        client.message("Example: psell [anonyiron x3] [basketball x1]")
-    } else {
-        client.message(`Sold: ${final.map(e => e[0]).join(", ")}. Total: ${final.map(e => e[1]).reduce((a, b) => a + b)}`)
-    }
+    match = itemRegex.exec(all);
+  }
+
+  if (!found) {
+    client.message("Example: psell [anonyiron x3] [basketball x1]");
+  } else {
+    client.message(
+      `Sold: ${final.map((e) => e[0]).join(", ")}. Total: ${
+        final.map((e) => e[1]).reduce((a, b) => a + b)
+      }`,
+    );
+  }
 }
