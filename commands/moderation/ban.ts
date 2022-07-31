@@ -1,15 +1,14 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  DatabasePlayer,
+  getDPlayer,
   DatabaseRoom,
   getDRoom,
   setDRoom,
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
+
   const dRoom: DatabaseRoom = getDRoom(client)!;
 
   if (
@@ -31,7 +30,7 @@ export default function (player: Player, client: Client, args: string[]) {
     if (user) {
       if (
         dRoom.ranks.get(args[0]) ||
-        JSON.parse(localStorage.getItem(client.wsUrl + user._id)!)?.rank ==
+        getDPlayer(client, player)?.rank ==
           "bot-owner"
       ) {
         client.message("You cannot ban ranked players!");
@@ -43,7 +42,7 @@ export default function (player: Player, client: Client, args: string[]) {
     } else {
       if (
         dRoom.ranks.get(args[0]) ||
-        JSON.parse(localStorage.getItem(client.wsUrl + args[0])!)?.rank ==
+        getDPlayer(client, player)?.rank ==
           "bot-owner"
       ) {
         client.message("You cannot ban ranked players!");

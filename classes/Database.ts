@@ -27,6 +27,16 @@ export function getDRoom(client: Client): DatabaseRoom | undefined {
   return room;
 }
 
+export function getDPlayer(client: Client, player: {id: string}) {
+  return (JSON.parse(
+    localStorage.getItem(client.wsUrl + player.id)!,
+  ) as DatabasePlayer);
+}
+
+export function setDPlayer(dPlayer: DatabasePlayer) {
+  localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
+}
+
 export function setDRoom(DR: DatabaseRoom, client: Client) {
   localStorage.setItem(
     "room_" + client.wsUrl + client.channel,

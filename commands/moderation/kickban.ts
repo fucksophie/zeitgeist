@@ -1,14 +1,13 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  DatabasePlayer,
+  getDPlayer,
   DatabaseRoom,
   getDRoom,
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
+
   const dRoom: DatabaseRoom = getDRoom(client)!;
 
   if (
@@ -40,7 +39,7 @@ export default function (player: Player, client: Client, args: string[]) {
 
       if (
         dRoom.ranks.get(user._id) ||
-        JSON.parse(localStorage.getItem(client.wsUrl + user._id)!)?.rank ==
+        getDPlayer(client, { id: user._id })?.rank ==
           "bot-owner"
       ) {
         client.message("You cannot kickban ranked players!");

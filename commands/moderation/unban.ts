@@ -1,14 +1,14 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  DatabasePlayer,
+  getDPlayer,
   DatabaseRoom,
   getDRoom,
+  setDRoom,
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
+
   const dRoom: DatabaseRoom = getDRoom(client)!;
 
   if (
@@ -31,12 +31,8 @@ export default function (player: Player, client: Client, args: string[]) {
     }
 
     client.unban(args[0]);
-    localStorage.setItem(
-      "room_" + client.wsUrl + client.channel,
-      JSON.stringify(
-        { ranks: [...dRoom.ranks] },
-      ),
-    );
+
+    setDRoom(dRoom, client);
   } else {
     client.message("You do not have permission!");
   }

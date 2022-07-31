@@ -1,6 +1,6 @@
 import { Client, Multiclient, Player } from "./classes/Client.ts";
 import config from "./config.json" assert { type: "json" };
-import { getDRoom, setDRoom } from "./classes/Database.ts";
+import { getDPlayer, getDRoom, setDPlayer, setDRoom } from "./classes/Database.ts";
 import { Discord } from "./classes/Discord.ts";
 
 const getDomainWithoutSubdomain = (url: string) => {
@@ -78,18 +78,15 @@ const mClient = (client: Client) => {
         } ||`,
       );
     }
-
-    if (!localStorage.getItem(client.wsUrl + player.id)) {
-      localStorage.setItem(
-        client.wsUrl + player.id,
-        JSON.stringify({
-          id: client.wsUrl + player.id,
-          money: 0,
-          rank: "",
-          items: [],
-          timeouts: [],
-        }),
-      );
+    
+    if (!getDPlayer(client, player)) {
+      setDPlayer({
+        id: client.wsUrl + player.id,
+        money: 0,
+        rank: "",
+        items: [],
+        timeouts: [],
+      })
     }
 
     const args = message.split(" ");

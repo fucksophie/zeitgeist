@@ -1,10 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { DatabasePlayer } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer  } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
 
   if (!dPlayer.items.find((e) => e.name == "basketball")) {
     client.message(`@${player.id} AYO WHERE YOUR BASKETBALL AT`);
@@ -16,7 +14,8 @@ export default function (player: Player, client: Client) {
     return;
   } else {
     dPlayer.timeouts.push("balls");
-    localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
+
+    setDPlayer(dPlayer)
   }
 
   client.message(
@@ -35,6 +34,6 @@ export default function (player: Player, client: Client) {
     dPlayer.money += money;
     dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "balls");
 
-    localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
+    setDPlayer(dPlayer)
   }, Math.random() * 30000);
 }

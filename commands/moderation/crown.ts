@@ -1,14 +1,13 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  DatabasePlayer,
+  getDPlayer,
   DatabaseRoom,
   getDRoom,
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
+
   const dRoom: DatabaseRoom = getDRoom(client)!;
 
   if (

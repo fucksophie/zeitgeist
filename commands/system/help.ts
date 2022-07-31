@@ -1,6 +1,5 @@
 import { Client, Player } from "../../classes/Client.ts";
 
-// deno-lint-ignore no-explicit-any
 export default function (
   _player: Player,
   client: Client,

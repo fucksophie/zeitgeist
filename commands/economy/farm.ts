@@ -1,5 +1,5 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { DatabasePlayer } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer  } from "../../classes/Database.ts";
 
 // deno-lint-ignore no-explicit-any
 function fyShuffle(arr: any[]) {
@@ -33,9 +33,7 @@ const FarmItems = [
 ];
 
 export default function (player: Player, client: Client) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
 
   if (dPlayer.timeouts.includes("farm")) {
     client.message(
@@ -44,7 +42,7 @@ export default function (player: Player, client: Client) {
     return;
   } else {
     dPlayer.timeouts.push("farm");
-    localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
+    setDPlayer(dPlayer)
   }
 
   const shuffledItems: {
@@ -71,6 +69,6 @@ export default function (player: Player, client: Client) {
     });
 
     dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "farm");
-    localStorage.setItem(dPlayer.id, JSON.stringify(dPlayer));
+    setDPlayer(dPlayer)
   }, Math.random() * 30000);
 }

@@ -1,10 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { DatabasePlayer } from "../../classes/Database.ts";
+import { getDPlayer } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer: DatabasePlayer = JSON.parse(
-    localStorage.getItem(client.wsUrl + player.id)!,
-  );
+  const dPlayer = getDPlayer(client, player);
 
   if (dPlayer.rank == "bot-owner") {
     try {
