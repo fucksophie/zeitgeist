@@ -19,7 +19,7 @@ export class Player {
 
 export class Client extends EventEmitter<{
   connect(): void;
-  message(player: Player, message: string): void;
+  message(player: Player, message: string, client: Client): void;
   join(player: Player): void;
   mouse(x: number, y: number, id: string): void;
 }> {
@@ -177,7 +177,7 @@ export class Client extends EventEmitter<{
         } else if (message.m == "bye") {
           this.people = this.people.filter((e) => e.id !== message.p);
         } else if (message.m == "a") {
-          this.emit("message", message.p as Player, message.a);
+          this.emit("message", message.p as Player, message.a, this);
         } else if (message.m == "m") {
           this.emit("mouse", +message.x, +message.y, message.id);
         }
