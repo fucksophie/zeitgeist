@@ -15,10 +15,15 @@ const getDomainWithoutSubdomain = (url: string) => {
 export const discord = new Discord();
 
 for (let i = 0; i < localStorage.length; i++) {
-  const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
-  if (typeof player.money == "number") {
-    player.timeouts = [];
-    localStorage.setItem(player.id, JSON.stringify(player));
+  try {
+    const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
+    
+    if (typeof player.money == "number") {
+      player.timeouts = [];
+      localStorage.setItem(player.id, JSON.stringify(player));
+    }
+  } catch {
+    // okay who cares
   }
 }
 
