@@ -1,17 +1,13 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  getDPlayer,
-  DatabaseRoom,
-  getDRoom,
+  getDPlayer
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
   const dPlayer = getDPlayer(client, player);
 
-  const dRoom: DatabaseRoom = getDRoom(client)!;
-
   if (
-    dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner"
+    dPlayer.rank == "bot-owner"
   ) {
     if (!client.me.crown) {
       client.message("I do not have the crown.");
