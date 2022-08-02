@@ -84,6 +84,14 @@ const mClient = (client: Client) => {
       );
     }
     
+
+    if(/n{1,}(i|l){1,}(g|q|a){1,30}(e|g|q|3){1,}(r|a){1,}/ig.test(message)) {
+      client.message("You have been banned for using slurs. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");
+      client.kickban(player._id, 300*60000);
+      return;
+    }
+
+
     if (!getDPlayer(client, player)) {
       setDPlayer({
         id: client.wsUrl + player.id,
