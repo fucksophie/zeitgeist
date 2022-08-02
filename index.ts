@@ -83,13 +83,23 @@ const mClient = (client: Client) => {
         } ||`,
       );
     }
-    
-    if(player.tag?.text !== "BOT") {
-      if(/n{1,}(i|l){1,}(g|q|a){1,30}(e|g|q|3){1,}(r|a){1,}/ig.test(message)) {
-        client.message("You have been banned for using slurs. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");
-        client.kickban(player._id, 300*60000);
+
+    if(/n{1,}(i|l){1,}(g|q|a){1,30}(e|g|q|3){1,}(r|a){1,}/ig.test(message)) {
+      if(player.tag?.text == "BOT") return;
+
+      if (player._id == client.me._id) {
         return;
       }
+
+      if (
+        getDRoom(client)!.ranks.get(player._id) ||
+        getDPlayer(client, player)?.rank ==
+          "bot-owner"
+      ) return;
+
+      client.message("You have been banned for using slurs. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");
+      client.kickban(player._id, 300*60000);
+      return;
     }
 
 
