@@ -30,7 +30,7 @@ export default function (player: Player, client: Client, args: string[]) {
     if (user) {
       if (
         dRoom.ranks.get(args[0]) ||
-        getDPlayer(client, player)?.rank ==
+        getDPlayer(client, {id: args[0]})?.rank ==
           "bot-owner"
       ) {
         client.message("You cannot ban ranked players!");
@@ -42,7 +42,7 @@ export default function (player: Player, client: Client, args: string[]) {
     } else {
       if (
         dRoom.ranks.get(args[0]) ||
-        getDPlayer(client, player)?.rank ==
+        getDPlayer(client, {id: args[0]})?.rank ==
           "bot-owner"
       ) {
         client.message("You cannot ban ranked players!");
