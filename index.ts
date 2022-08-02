@@ -63,6 +63,16 @@ const mClient = (client: Client) => {
   });
 
   client.on("join", (player) => {
+    if(!getDPlayer(client, player)) {
+      setDPlayer({
+        id: client.wsUrl + player._id,
+        money: 0,
+        timeouts: [],
+        rank: "",
+        items: []
+      })
+    }
+    
     if (client.me.crown) {
       const dRoom = getDRoom(client)!;
 
@@ -73,6 +83,7 @@ const mClient = (client: Client) => {
   });
 
   client.on("message", (player: Player, message: string) => {
+
     if (discord && discord.channel && getDRoom(client)?.discordEnabled) {
       if (message.startsWith("[Discord]") && player._id == client.me._id) {
         return;
