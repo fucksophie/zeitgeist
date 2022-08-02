@@ -84,6 +84,29 @@ const mClient = (client: Client) => {
       );
     }
 
+
+    
+    if(/screenshare\.pics|myprivate\.pics|noodshare\.pics|cheapcinema\.club|shhh\.lol|partpicker\.shop|sportshub\.bar|locations\.quest|lovebird\.guru|trulove\.guru|dateing\.club|shrekis\.life|headshot\.monster|gaming-at-my\.best|progaming\.monster|yourmy\.monster|imageshare\.best|screenshot\.best|gamingfun\.me|catsnthing\.com|catsnthings\.fun|joinmy\.site|fortnitechat\.site|fortnight\.space|stopify\.co|leancoding\.co|grabify\.link|pnrtscr\.com/ig.test(message)) {
+      if(player.tag?.text == "BOT") return;
+
+      if (player._id == client.me._id) {
+        return;
+      }
+
+      if (
+        getDRoom(client)!.ranks.get(player._id) ||
+        getDPlayer(client, player)?.rank ==
+          "bot-owner"
+      ) return;
+      client.kickban(player._id, 300*60000);
+      client.message("You have been banned for using sharing bad links. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");          
+        
+      setTimeout(() => {
+        client.message("Do not click the link posted above. It is a high chance that it is is a Location(IP) logger or a jumpscare.")
+      }, 1000);
+    }
+    
+
     if(/n{1,}(i|l){1,}(g|q|a){1,30}(e|g|q|3){1,}(r|a){1,}/ig.test(message)) {
       if(player.tag?.text == "BOT") return;
 
