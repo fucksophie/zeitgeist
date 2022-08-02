@@ -98,9 +98,12 @@ const mClient = (client: Client) => {
         getDPlayer(client, player)?.rank ==
           "bot-owner"
       ) return;
-      client.kickban(player._id, 300*60000);
       client.message("You have been banned for using sharing bad links. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");          
-        
+
+      setTimeout(() => {
+        client.kickban(player._id, 300*60000);
+      }, 100)
+
       setTimeout(() => {
         client.message("Do not click the link posted above. It is a high chance that it is is a Location(IP) logger or a jumpscare.")
       }, 1000);
@@ -121,7 +124,9 @@ const mClient = (client: Client) => {
       ) return;
 
       client.message("You have been banned for using slurs. Please contact yourfriend#5919 if you think that this is a false positive. ID: "+player._id+". (DO NOT JOKE AROUND WITH THIS, YOU WILL NOT BE UNBANNED)");
-      client.kickban(player._id, 300*60000);
+      setTimeout(() => {
+        client.kickban(player._id, 300*60000);
+      }, 100)
       return;
     }
 
