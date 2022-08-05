@@ -1,5 +1,5 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { getDPlayer, setDPlayer  } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
 // deno-lint-ignore no-explicit-any
 function fyShuffle(arr: any[]) {
@@ -42,7 +42,7 @@ export default function (player: Player, client: Client) {
     return;
   } else {
     dPlayer.timeouts.push("farm");
-    setDPlayer(dPlayer)
+    setDPlayer(dPlayer);
   }
 
   const shuffledItems: {
@@ -69,6 +69,6 @@ export default function (player: Player, client: Client) {
     });
 
     dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "farm");
-    setDPlayer(dPlayer)
+    setDPlayer(dPlayer);
   }, Math.random() * 30000);
 }

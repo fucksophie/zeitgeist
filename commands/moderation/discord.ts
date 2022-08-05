@@ -1,7 +1,7 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  getDPlayer,
   DatabaseRoom,
+  getDPlayer,
   getDRoom,
   setDRoom,
 } from "../../classes/Database.ts";

@@ -19,7 +19,7 @@ export default function (player: Player, client: Client) {
 
   dPlayer.money += total;
 
-  setDPlayer(dPlayer)
+  setDPlayer(dPlayer);
 
   client.message(`@${player.id} sold: ${final.join(", ")}. +${total}$#.`);
 }

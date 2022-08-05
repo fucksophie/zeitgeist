@@ -1,7 +1,5 @@
 import { Client, Player } from "../../classes/Client.ts";
-import {
-  getDPlayer
-} from "../../classes/Database.ts";
+import { getDPlayer } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
   const dPlayer = getDPlayer(client, player);

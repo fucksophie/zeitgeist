@@ -1,16 +1,12 @@
 import { Client, Player } from "../../classes/Client.ts";
-import {
-  getDPlayer,
-  DatabaseRoom,
-  getDRoom,
-} from "../../classes/Database.ts";
+import { DatabaseRoom, getDPlayer, getDRoom } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
   const dRoom: DatabaseRoom = getDRoom(client)!;
 
   if (args?.[0]) {
-    const dPlayer = getDPlayer(client, { id: args[0] })
-    
+    const dPlayer = getDPlayer(client, { id: args[0] });
+
     if (dPlayer) {
       client.message(
         args[0] + "'s rank is: " + (dPlayer.rank || "(none)") +

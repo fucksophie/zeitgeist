@@ -1,7 +1,7 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  getDPlayer,
   DatabaseRoom,
+  getDPlayer,
   getDRoom,
   setDRoom,
 } from "../../classes/Database.ts";
@@ -19,7 +19,7 @@ export default function (player: Player, client: Client, args: string[]) {
       return;
     }
 
-    const rawPlayer = getDPlayer(client, { id: args[0] })
+    const rawPlayer = getDPlayer(client, { id: args[0] });
 
     if (rawPlayer) {
       if (client.me._id == args[0]) {

@@ -3,8 +3,6 @@ import { getDPlayer } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
   client.message(
-    `@${player.id} has ${
-      getDPlayer(client, player).money
-    }$#.`,
+    `@${player.id} has ${getDPlayer(client, player).money}$#.`,
   );
 }

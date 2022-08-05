@@ -1,5 +1,5 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { getDPlayer, setDPlayer  } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client) {
   const dPlayer = getDPlayer(client, player);
@@ -15,7 +15,7 @@ export default function (player: Player, client: Client) {
   } else {
     dPlayer.timeouts.push("balls");
 
-    setDPlayer(dPlayer)
+    setDPlayer(dPlayer);
   }
 
   client.message(
@@ -34,6 +34,6 @@ export default function (player: Player, client: Client) {
     dPlayer.money += money;
     dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "balls");
 
-    setDPlayer(dPlayer)
+    setDPlayer(dPlayer);
   }, Math.random() * 30000);
 }

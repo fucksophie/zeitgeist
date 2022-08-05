@@ -27,7 +27,7 @@ export function getDRoom(client: Client): DatabaseRoom | undefined {
   return room;
 }
 
-export function getDPlayer(client: Client, player: {id: string}) {
+export function getDPlayer(client: Client, player: { id: string }) {
   return (JSON.parse(
     localStorage.getItem(client.wsUrl + player.id)!,
   ) as DatabasePlayer);

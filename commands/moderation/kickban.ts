@@ -1,8 +1,9 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  getDPlayer,
   DatabaseRoom,
+  getDPlayer,
   getDRoom,
+  setDRoom,
 } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
@@ -30,23 +31,37 @@ export default function (player: Player, client: Client, args: string[]) {
       client.message("Max kickban time is 300 minutes.");
       return;
     }
+    if (args[0] == client.me._id) {
+      client.message("You cannot kickban the bot!");
+      return;
+    }
+
+    if (dRoom.ranks.get(args[0])?.startsWith("kickban")) {
+      client.message("This user is already kickbanned.");
+      return;
+    }
+
+    if (dRoom.ranks.get(args[0]) == "banned") {
+      client.message("This user is already banned.");
+      return;
+    }
+
+    if (
+      dRoom.ranks.get(args[0]) ||
+      getDPlayer(client, { id: args[0] })?.rank ==
+        "bot-owner"
+    ) {
+      client.message("You cannot kickban ranked players!");
+      return;
+    }
 
     if (user) {
-      if (user._id == client.me._id) {
-        client.message("You cannot kickban the bot!");
-        return;
-      }
-
-      if (
-        dRoom.ranks.get(user._id) ||
-        getDPlayer(client, { id: user._id })?.rank ==
-          "bot-owner"
-      ) {
-        client.message("You cannot kickban ranked players!");
-        return;
-      }
-
       client.kickban(args[0], (+args[1]) * 60000);
+    } else {
+      client.message("Kickbanned offline user " + args[0] + ".");
+      dRoom.ranks.set(args[0], "kickban-" + (Date.now() + (+args[1]) * 60000));
+
+      setDRoom(dRoom, client);
     }
   } else {
     client.message("You do not have permission!");

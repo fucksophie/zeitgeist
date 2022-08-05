@@ -1,8 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { getDPlayer, setDPlayer  } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
 export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer = getDPlayer(client, player)
+  const dPlayer = getDPlayer(client, player);
 
   const all = args.join(" ");
   const itemRegex = /\[([^[\]]*) x(\d*)\]/gm;
@@ -42,7 +42,7 @@ export default function (player: Player, client: Client, args: string[]) {
 
       final.push([`${count} x${item.name}`, count * item.cost]);
 
-      setDPlayer(dPlayer)
+      setDPlayer(dPlayer);
     }
 
     match = itemRegex.exec(all);

@@ -78,6 +78,15 @@ const mClient = (client: Client) => {
 
       if (dRoom.ranks.get(player._id) == "banned") {
         client.kickban(player._id, 1.8e+6);
+      } else if (dRoom.ranks.get(player._id)?.startsWith("kickban")) {
+        client.message("This kickban was a offline-user-based kickban.")
+        const time = ((+dRoom.ranks.get(player._id)?.split("-").at(-1)!)-Date.now());
+
+        if(time > 0) {
+          client.kickban(player._id, time);
+        }
+
+        dRoom.ranks.delete(player._id);
       }
     }
   });

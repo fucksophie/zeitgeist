@@ -1,7 +1,7 @@
 import { Client, Player } from "../../classes/Client.ts";
 import {
-  getDPlayer,
   DatabaseRoom,
+  getDPlayer,
   getDRoom,
   setDRoom,
 } from "../../classes/Database.ts";
@@ -22,6 +22,11 @@ export default function (player: Player, client: Client, args: string[]) {
 
     if (dRoom.ranks.get(args[0]) == "banned") {
       client.message("User " + args[0] + " has been unbanned.");
+      dRoom.ranks.delete(args[0]);
+    } else if (dRoom.ranks.get(args[0])?.startsWith("kickban")) {
+      client.message(
+        "User " + args[0] + " has been un-off-line-kick-ban-ed..?",
+      );
       dRoom.ranks.delete(args[0]);
     } else {
       client.message(
