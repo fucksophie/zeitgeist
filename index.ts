@@ -61,6 +61,10 @@ const mClient = (client: Client) => {
       await discord.makeNewBridge(client);
     }
   });
+  
+  /*client.on("namechange", (now, before) => {
+    console.log("Zeitgeist detected a namechange." + ` From ${before.name} to ${now.name}.`)
+  })*/
 
   client.on("join", (player) => {
     if(!getDPlayer(client, player)) {
@@ -69,7 +73,8 @@ const mClient = (client: Client) => {
         money: 0,
         timeouts: [],
         rank: "",
-        items: []
+        items: [],
+        namehistory: []
       })
     }
     

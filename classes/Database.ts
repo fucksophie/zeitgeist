@@ -5,6 +5,7 @@ export interface DatabasePlayer {
   money: number;
   timeouts: string[];
   rank: string;
+  namehistory: string[]
   items: { name: string; cost: number; amount: number; garbage: boolean }[];
 }
 

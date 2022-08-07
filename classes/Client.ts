@@ -22,6 +22,8 @@ export class Client extends EventEmitter<{
   message(player: Player, message: string, client: Client): void;
   join(player: Player): void;
   mouse(x: number, y: number, id: string): void;
+  namechange(now: Player, before: Player): void;
+
 }> {
   wsUrl!: string;
   ws!: WebSocket;
@@ -165,7 +167,13 @@ export class Client extends EventEmitter<{
           );
           this.people = message.ppl;
         } else if (message.m == "p") {
-          if (this.people.find((e) => e.id == message.id)) {
+          const found = this.people.find((e) => e.id == message.id);
+
+          if (found) {
+            if(found.name != message.name) {
+              this.emit("namechange", message as Player, found)
+            }
+
             this.people = this.people.filter((e) => e.id !== message.id);
             this.people.push(message);
             return;
