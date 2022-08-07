@@ -23,7 +23,6 @@ export class Client extends EventEmitter<{
   join(player: Player): void;
   mouse(x: number, y: number, id: string): void;
   namechange(now: Player, before: Player): void;
-
 }> {
   wsUrl!: string;
   ws!: WebSocket;
@@ -32,6 +31,7 @@ export class Client extends EventEmitter<{
   channel!: string;
   alive = false;
   reconnectInterval = 0;
+  messageBuffer: string[] = [];
 
   // 🦋 🐛 🐝 🐞 🐜 🕷 🕸 🦂 🦗 🦟 todo: pet the bugs :3
 
@@ -54,10 +54,7 @@ export class Client extends EventEmitter<{
   }
 
   message(message: string) {
-    this.send({
-      m: "a",
-      message,
-    });
+    this.messageBuffer.push(message)
   }
 
   move(x: number, y: number) {
@@ -113,6 +110,15 @@ export class Client extends EventEmitter<{
       this.alive = true;
 
       this.send({ "m": "hi", "token": token });
+
+      setInterval(()=>{
+        if(this.messageBuffer.length != 0) {
+          this.send({
+            m: "a",
+            message: this.messageBuffer.shift(),
+          });
+        }
+      }, 500)
     });
 
     this.ws.addEventListener("close", () => {

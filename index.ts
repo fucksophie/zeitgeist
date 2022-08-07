@@ -62,9 +62,14 @@ const mClient = (client: Client) => {
     }
   });
   
-  /*client.on("namechange", (now, before) => {
-    console.log("Zeitgeist detected a namechange." + ` From ${before.name} to ${now.name}.`)
-  })*/
+  client.on("namechange", now => {
+    const person = getDPlayer(client, now);
+    
+    if(person.namehistory.at(-1) !== now.name) {
+      person.namehistory.push(now.name);
+      setDPlayer(person);
+    }
+  })
 
   client.on("join", (player) => {
     if(!getDPlayer(client, player)) {
@@ -78,6 +83,13 @@ const mClient = (client: Client) => {
       })
     }
     
+    const person = getDPlayer(client, player);
+
+    if(person.namehistory.at(-1) !== player.name) {
+      person.namehistory.push(player.name);
+      setDPlayer(person);
+    }
+
     if (client.me.crown) {
       const dRoom = getDRoom(client)!;
 

@@ -4,7 +4,7 @@ export default function (
   _player: Player,
   client: Client,
   _args: string[],
-  categories: Map<string, Map<string, any>>,
+  categories: Map<string, Map<string, string>>,
 ) {
   let amount = 0;
 
@@ -16,8 +16,6 @@ export default function (
       commandsString.push(v1);
     });
 
-    setTimeout(() => {
-      client.message(`${category}: ${commandsString.join(", ")}`);
-    }, amount * 350);
+    client.message(`${category}: ${commandsString.join(", ")}`);
   });
 }
