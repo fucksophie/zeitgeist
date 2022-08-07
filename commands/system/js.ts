@@ -1,7 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { getDPlayer } from "../../classes/Database.ts";
+import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client, args: string[]) {
+// deno-lint-ignore require-await
+export default async function (player: Player, client: Client, args: string[]) {
   const dPlayer = getDPlayer(client, player);
 
   if (dPlayer.rank == "bot-owner") {
