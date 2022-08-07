@@ -54,7 +54,9 @@ export class Client extends EventEmitter<{
   }
 
   message(message: string) {
-    this.messageBuffer.push(message)
+    message.match(/.{1,450}/g)?.forEach((x) => {
+      this.messageBuffer.push(x)
+    });
   }
 
   move(x: number, y: number) {
@@ -118,7 +120,7 @@ export class Client extends EventEmitter<{
             message: this.messageBuffer.shift(),
           });
         }
-      }, 500)
+      }, 700)
     });
 
     this.ws.addEventListener("close", () => {

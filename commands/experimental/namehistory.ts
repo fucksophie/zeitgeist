@@ -14,15 +14,14 @@ export default function (player: Player, client: Client, args: string[]) {
   }
 
   if (dPlayer) {
-    `${(dPlayer.namehistory[0] || dPlayer.id)}'s namehistory: ${
-      dPlayer.namehistory.join(", ")
-    }.`.match(/.{1,511}/g)?.forEach((x) => {
-      client.message(x);
-    });
+    client.message(
+      `${(dPlayer.namehistory[0] || dPlayer.id)}'s namehistory: ${
+        dPlayer.namehistory.join(", ")
+      }.`,
+    );
   } else {
-    `Your namehistory: ${getDPlayer(client, player).namehistory.join(", ")}.`
-      .match(/.{1,511}/g)?.forEach((x) => {
-        client.message(x);
-      });
+    client.message(
+      `Your namehistory: ${getDPlayer(client, player).namehistory.join(", ")}.`,
+    );
   }
 }
