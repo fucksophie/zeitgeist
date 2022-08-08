@@ -1,6 +1,11 @@
 import { Client, Multiclient, Player } from "./classes/Client.ts";
 import config from "./config.json" assert { type: "json" };
-import { getDPlayer, getDRoom, setDPlayer, setDRoom } from "./classes/Database.ts";
+import {
+  getDPlayer,
+  getDRoom,
+  setDPlayer,
+  setDRoom,
+} from "./classes/Database.ts";
 import { Discord } from "./classes/Discord.ts";
 
 const getDomainWithoutSubdomain = (url: string) => {
@@ -17,7 +22,7 @@ export const discord = new Discord();
 for (let i = 0; i < localStorage.length; i++) {
   try {
     const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
-    
+
     if (typeof player.money == "number") {
       player.timeouts = [];
       localStorage.setItem(player.id, JSON.stringify(player));
@@ -61,31 +66,31 @@ const mClient = (client: Client) => {
       await discord.makeNewBridge(client);
     }
   });
-  
-  client.on("namechange", now => {
+
+  client.on("namechange", (now) => {
     const person = getDPlayer(client, now);
-    
-    if(person.namehistory.at(-1) !== now.name) {
+
+    if (person.namehistory.at(-1) !== now.name) {
       person.namehistory.push(now.name);
       setDPlayer(person);
     }
-  })
+  });
 
   client.on("join", (player) => {
-    if(!getDPlayer(client, player)) {
+    if (!getDPlayer(client, player)) {
       setDPlayer({
         id: client.wsUrl + player._id,
         money: 0,
         timeouts: [],
         rank: "",
         items: [],
-        namehistory: []
-      })
+        namehistory: [],
+      });
     }
-    
+
     const person = getDPlayer(client, player);
 
-    if(person.namehistory.at(-1) !== player.name) {
+    if (person.namehistory.at(-1) !== player.name) {
       person.namehistory.push(player.name);
       setDPlayer(person);
     }
@@ -96,10 +101,11 @@ const mClient = (client: Client) => {
       if (dRoom.ranks.get(player._id) == "banned") {
         client.kickban(player._id, 1.8e+6);
       } else if (dRoom.ranks.get(player._id)?.startsWith("kickban")) {
-        client.message("This kickban was a offline-user-based kickban.")
-        const time = ((+dRoom.ranks.get(player._id)?.split("-").at(-1)!)-Date.now());
+        client.message("This kickban was a offline-user-based kickban.");
+        const time =
+          ((+dRoom.ranks.get(player._id)?.split("-").at(-1)!) - Date.now());
 
-        if(time > 0) {
+        if (time > 0) {
           client.kickban(player._id, time);
         }
 
@@ -109,7 +115,6 @@ const mClient = (client: Client) => {
   });
 
   client.on("message", (player: Player, message: string) => {
-
     if (discord && discord.channel && getDRoom(client)?.discordEnabled) {
       if (message.startsWith("[Discord]") && player._id == client.me._id) {
         return;
@@ -120,8 +125,6 @@ const mClient = (client: Client) => {
         } ||`,
       );
     }
-
-
 
     const args = message.split(" ");
     const command = args.shift();

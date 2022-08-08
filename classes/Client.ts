@@ -17,6 +17,17 @@ export class Player {
   y = 0;
 }
 
+interface ChannelSettings {
+  chat?: boolean;
+  color?: string;
+  color2?: string;
+  visible?: boolean;
+  limit?: number;
+  crownsolo?: boolean;
+  "no cussing"?: boolean;
+  minOnlineTime?: number;
+}
+
 export class Client extends EventEmitter<{
   connect(): void;
   message(player: Player, message: string, client: Client): void;
@@ -32,6 +43,7 @@ export class Client extends EventEmitter<{
   alive = false;
   reconnectInterval = 0;
   messageBuffer: string[] = [];
+  settings!: ChannelSettings;
 
   // 🦋 🐛 🐝 🐞 🐜 🕷 🕸 🦂 🦗 🦟 todo: pet the bugs :3
 
@@ -53,9 +65,16 @@ export class Client extends EventEmitter<{
     });
   }
 
+  channelset(set: ChannelSettings) {
+    this.send({
+      m: "chset",
+      set,
+    });
+  }
+
   message(message: string) {
     message.match(/.{1,450}/g)?.forEach((x) => {
-      this.messageBuffer.push(x)
+      this.messageBuffer.push(x);
     });
   }
 
@@ -113,14 +132,14 @@ export class Client extends EventEmitter<{
 
       this.send({ "m": "hi", "token": token });
 
-      setInterval(()=>{
-        if(this.messageBuffer.length != 0) {
+      setInterval(() => {
+        if (this.messageBuffer.length != 0) {
           this.send({
             m: "a",
             message: this.messageBuffer.shift(),
           });
         }
-      }, 700)
+      }, 700);
     });
 
     this.ws.addEventListener("close", () => {
@@ -162,6 +181,8 @@ export class Client extends EventEmitter<{
             this.me.crown = false;
           }
 
+          this.settings = message.ch.settings;
+
           if (this.me.crown) {
             message.ppl.forEach((e: Player) => {
               this.emit("join", e);
@@ -178,8 +199,8 @@ export class Client extends EventEmitter<{
           const found = this.people.find((e) => e.id == message.id);
 
           if (found) {
-            if(found.name != message.name) {
-              this.emit("namechange", message as Player, found)
+            if (found.name != message.name) {
+              this.emit("namechange", message as Player, found);
             }
 
             this.people = this.people.filter((e) => e.id !== message.id);

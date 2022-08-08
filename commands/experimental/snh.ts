@@ -13,9 +13,15 @@ export default async function (_: Player, client: Client, args: string[]) {
       }`,
     );
   } else if (json.type == "id") {
-    const names: string[] = [...new Set(json.data.nicknames.map((e: { name: string }) =>
-      e.name
-    ).filter((o: string, i: number, x: string[]) => !i || (o != x[i - 1])))] as string[];
+    const names: string[] = [
+      ...new Set(
+        json.data.nicknames.map((e: { name: string }) => e.name).filter((
+          o: string,
+          i: number,
+          x: string[],
+        ) => !i || (o != x[i - 1])),
+      ),
+    ] as string[];
 
     client.message(
       `Last found: ${json.data.rooms.at(-1).ch} at ${
