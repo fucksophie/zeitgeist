@@ -16,5 +16,10 @@ export default function (_: Player, client: Client, args: string[]) {
         return;
     }
 
+    if(/n*(i|l|\|)*(g|q|a){2,}(e|3|)r*/ig.test(repeified)) {
+        client.message("No. (3)")
+        return;
+    }
+    
     client.message("Repeified: " + repeified)
 }
