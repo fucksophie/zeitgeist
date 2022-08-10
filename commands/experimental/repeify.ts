@@ -1,7 +1,10 @@
 import { Client, Player } from "../../classes/Client.ts";
 
 export default function (_: Player, client: Client, args: string[]) { 
-    const repeified = args.join(" ").replaceAll("g", "r").replaceAll("l", "p").replaceAll("d", "e");
+    const repeified = args.join(" ")
+        .replaceAll("g", "r").replaceAll("G", "R")
+        .replaceAll("l", "p").replaceAll("L", "P")
+        .replaceAll("d", "e").replaceAll("D", "E");
     
     if(repeified.split(" ").join("").toLowerCase().includes("rape")) {
         client.message("No. (1)");
