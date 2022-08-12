@@ -82,7 +82,7 @@ const rainbowIntervals: Map<string, RainbowInterval> = new Map<
   RainbowInterval
 >();
 
-const colors = rainbow(20, "hex", true);
+const colors = rainbow(20, "hex", false);
 
 export default function (player: Player, client: Client) {
   const dPlayer = getDPlayer(client, player);
