@@ -131,7 +131,7 @@ export default function (player: Player, client: Client) {
 
             current.current++;
             rainbowIntervals.set(client.wsUrl + client.channel, current);
-          }, 300),
+          }, 1200),
         },
       );
 
