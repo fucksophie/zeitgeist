@@ -110,6 +110,8 @@ const mClient = (client: Client) => {
         }
 
         dRoom.ranks.delete(player._id);
+        
+        setDRoom(dRoom, client);
       }
     }
   });
