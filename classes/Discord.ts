@@ -39,10 +39,10 @@ export class Discord {
 
       this.discord.on("messageCreate", (msg: Message): void => {
         if (msg.author.id == this.discord?.user?.id) return;
-
+        
         if (config.discord.id == msg.channelID) {
           this.clients.forEach((e) => {
-            e.message("[Discord] " + msg.author.tag + ": " + msg.content);
+            e.message("[Discord] " + msg.author.tag + ": " + msg.content?.slice(0, 400)?.split("\n")?.[0]);
           });
         }
       });
