@@ -1,21 +1,48 @@
 import { Client, Player } from "../../classes/Client.ts";
-import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
+import { DatabasePlayer, getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client) {
-  const dPlayer = getDPlayer(client, player);
+
+async function finish(client: Client, dPlayer: DatabasePlayer, player: Player) {
+  const money = Math.floor(Math.random() * 100);
+
+  client.message(
+    `@${player.id}, finished ballin. Won NBA. Earned ${money}$#.`,
+  );
+
+  dPlayer.money += money;
+  dPlayer.timeouts = dPlayer.timeouts.filter(x => !x.startsWith("balls-"));
+
+  await setDPlayer(dPlayer);
+}
+
+export default async function (player: Player, client: Client) {
+  const dPlayer = await getDPlayer(client, player);
 
   if (!dPlayer.items.find((e) => e.name == "basketball")) {
     client.message(`@${player.id} AYO WHERE YOUR BASKETBALL AT`);
     return;
   }
 
-  if (dPlayer.timeouts.includes("balls")) {
-    client.message(`@${player.id} cant ball 2 balls at da same time??`);
-    return;
-  } else {
-    dPlayer.timeouts.push("balls");
+  const time = Math.random() * 30000;
+  
+  let found = dPlayer.timeouts.find(x => x.startsWith("balls-"));
 
-    setDPlayer(dPlayer);
+  if (found) {
+    if((+found.split("-")![1]!) > Date.now()) {
+      client.message(`@${player.id} cant ball 2 balls at da same time??`);
+      return;
+    } else {
+      dPlayer.timeouts = dPlayer.timeouts.filter(x => !x.startsWith("balls-"));
+      found = undefined;
+
+      await finish(client, dPlayer, player);
+    }
+  }
+
+  if(!found) {
+    dPlayer.timeouts.push("balls-" + (Date.now() + time));
+
+    await setDPlayer(dPlayer);
   }
 
   client.message(
@@ -24,16 +51,7 @@ export default function (player: Player, client: Client) {
     }•`,
   );
 
-  setTimeout(() => {
-    const money = Math.floor(Math.random() * 100);
-
-    client.message(
-      `@${player.id}, finished ballin. Won NBA. Earned ${money}$#.`,
-    );
-
-    dPlayer.money += money;
-    dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "balls");
-
-    setDPlayer(dPlayer);
-  }, Math.random() * 30000);
+  setTimeout(async () => {
+    await finish(client, dPlayer, player);
+  }, time);
 }

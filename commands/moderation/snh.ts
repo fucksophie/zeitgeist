@@ -1,9 +1,17 @@
 import { Client, Player } from "../../classes/Client.ts";
 
 export default async function (_: Player, client: Client, args: string[]) {
-  const data = await fetch(
-    `https://mpp.seq37.dev:13164/?query=${encodeURIComponent(args.join(""))}`,
-  );
+  let data;
+
+  try {
+    data = await fetch(
+      `https://mpp.seq.wtf:13164/?query=${encodeURIComponent(args.join(""))}`,
+    );
+  } catch(_) {
+    client.message('API down.')
+    return;
+  }
+
   const json = await data.json();
 
   if (json.type == "nick") {

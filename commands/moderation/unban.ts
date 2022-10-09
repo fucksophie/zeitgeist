@@ -6,10 +6,10 @@ import {
   setDRoom,
 } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client, args: string[]) {
+  const dPlayer = await getDPlayer(client, player);
 
-  const dRoom: DatabaseRoom = getDRoom(client)!;
+  const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (
     dRoom.ranks.get(player.id) == "room-operator" ||
@@ -37,7 +37,7 @@ export default function (player: Player, client: Client, args: string[]) {
 
     client.unban(args[0]);
 
-    setDRoom(dRoom, client);
+    await setDRoom(dRoom, client);
   } else {
     client.message("You do not have permission!");
   }

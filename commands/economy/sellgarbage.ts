@@ -1,8 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
 import { getDPlayer, setDPlayer } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client) {
+  const dPlayer = await getDPlayer(client, player);
 
   let total = 0;
   const final: string[] = [];
@@ -19,7 +19,7 @@ export default function (player: Player, client: Client) {
 
   dPlayer.money += total;
 
-  setDPlayer(dPlayer);
+  await setDPlayer(dPlayer);
 
   client.message(`@${player.id} sold: ${final.join(", ")}. +${total}$#.`);
 }

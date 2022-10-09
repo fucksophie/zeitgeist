@@ -516,7 +516,7 @@ const Words = [
   "expand",
 ];
 
-function listener(player: Player, message: string, client: Client) {
+async function listener(player: Player, message: string, client: Client) {
   const wordrace = timeouts.get(client.wsUrl);
   if (!wordrace) return;
 
@@ -532,12 +532,12 @@ function listener(player: Player, message: string, client: Client) {
       return;
     }
   } else {
-    const dPlayer = getDPlayer(client, player);
+    const dPlayer = await getDPlayer(client, player);
 
     const money = Math.floor(1 / (Date.now() - wordrace.time) * 200000);
     dPlayer.money += money;
 
-    setDPlayer(dPlayer);
+    await setDPlayer(dPlayer);
 
     wordrace.wrong = 0;
     wordrace.answer = "";

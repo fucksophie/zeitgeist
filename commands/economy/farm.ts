@@ -32,17 +32,27 @@ const FarmItems = [
   { name: "OBAMNA", cost: 7, garbage: true },
 ];
 
-export default function (player: Player, client: Client) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client) {
+  const dPlayer = await getDPlayer(client, player);let time = Math.random() * 30000;
+  let found = dPlayer.timeouts.find(x => x.startsWith("farm-"));
 
-  if (dPlayer.timeouts.includes("farm")) {
-    client.message(
-      `@${player.id} can't farrrmmmm, twooo placess.. at the same.. time...`,
-    );
-    return;
-  } else {
-    dPlayer.timeouts.push("farm");
-    setDPlayer(dPlayer);
+  if (found) {
+    if((+found.split("-")![1]!) > Date.now()) {
+      client.message(
+        `@${player.id} can't farrrmmmm, twooo placess.. at the same.. time...`,
+      );
+      return;
+    } else {
+      dPlayer.timeouts = dPlayer.timeouts.filter(x => !x.startsWith("farm-"));
+      found = undefined;
+      time = 0;
+    }
+  }
+
+  if(!found) {
+    dPlayer.timeouts.push("farm-" + (Date.now() + time));
+
+    await setDPlayer(dPlayer);
   }
 
   const shuffledItems: {
@@ -51,8 +61,8 @@ export default function (player: Player, client: Client) {
     garbage: boolean;
   }[] = fyShuffle(FarmItems).slice(0, Math.floor(Math.random() * 5) + 1);
 
-  client.message(`@${player.id} Started farming.`);
-  setTimeout(() => {
+  if(time !== 0) client.message(`@${player.id} Started farming.`);
+  setTimeout(async () => {
     client.message(
       `@${player.id} Finished farming. Got: ` + shuffledItems.map((e) => {
         return `${e.name} (${e.cost}$#)`;
@@ -68,7 +78,7 @@ export default function (player: Player, client: Client) {
       }
     });
 
-    dPlayer.timeouts = dPlayer.timeouts.filter((e) => e !== "farm");
-    setDPlayer(dPlayer);
-  }, Math.random() * 30000);
+    dPlayer.timeouts = dPlayer.timeouts.filter(x => !x.startsWith("farm-"));
+    await setDPlayer(dPlayer);
+  }, time);
 }

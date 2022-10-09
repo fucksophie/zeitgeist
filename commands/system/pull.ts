@@ -2,7 +2,7 @@ import { Client, Player } from "../../classes/Client.ts";
 import { getDPlayer } from "../../classes/Database.ts";
 
 export default async function (player: Player, client: Client) {
-  const dPlayer = getDPlayer(client, player);
+  const dPlayer = await getDPlayer(client, player);
 
   if (dPlayer.rank == "bot-owner") {
     const pull = Deno.run({ cmd: ["git", "pull"] });

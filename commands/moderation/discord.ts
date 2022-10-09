@@ -14,9 +14,9 @@ export default async function (
   _: unknown,
   discord: Discord,
 ) {
-  const dPlayer = getDPlayer(client, player);
+  const dPlayer = await getDPlayer(client, player);
 
-  const dRoom: DatabaseRoom = getDRoom(client)!;
+  const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (dPlayer.rank == "bot-owner") {
     if (dRoom.discordEnabled) {
@@ -27,7 +27,7 @@ export default async function (
       await discord.makeNewBridge(client);
     }
 
-    setDRoom(dRoom, client);
+    await setDRoom(dRoom, client);
     client.message(
       "Discord is now: " + (dRoom.discordEnabled ? "Enabled." : "Disabled."),
     );

@@ -2,13 +2,13 @@
   "servers": [
     {
       "url": "wss://mppclone.com:8443",
-      "token": "token lapis give u",
-      "rooms": ["lobby"]
-    },
-    {
-      "url": "wss://mpp-ws.141.lv/",
-      "token": "token yf gives u",
-      "rooms": ["lobby"]
+      "token": "Lpais token",
+      "rooms": ["✧𝓓𝓔𝓥 𝓡𝓸𝓸𝓶✧"]
     }
-  ]
+  ],
+  "postgres": "postgres url",
+  "discord": {
+    "id": "discord channel id",
+    "token": "token "
+  }
 }

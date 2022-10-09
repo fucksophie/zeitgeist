@@ -6,10 +6,10 @@ import {
   setDRoom,
 } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client, args: string[]) {
+  const dPlayer = await getDPlayer(client, player);
 
-  const dRoom: DatabaseRoom = getDRoom(client)!;
+  const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (
     dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner"
@@ -19,7 +19,7 @@ export default function (player: Player, client: Client, args: string[]) {
       return;
     }
 
-    const rawPlayer = getDPlayer(client, { id: args[0] });
+    const rawPlayer = await getDPlayer(client, { id: args[0] });
 
     if (rawPlayer) {
       if (client.me._id == args[0]) {
@@ -40,7 +40,7 @@ export default function (player: Player, client: Client, args: string[]) {
 
         dRoom.ranks.set(args[0], "room-owner");
 
-        setDRoom(dRoom, client);
+        await setDRoom(dRoom, client);
 
         client.message(args[0] + " is now a room owner.");
       } else if (args[1] == "room-operator") {
@@ -51,7 +51,7 @@ export default function (player: Player, client: Client, args: string[]) {
 
         dRoom.ranks.set(args[0], "room-operator");
 
-        setDRoom(dRoom, client);
+        await setDRoom(dRoom, client);
 
         client.message(args[0] + " is now a room operator.");
       } else if (args[1] == "none") {
@@ -66,7 +66,7 @@ export default function (player: Player, client: Client, args: string[]) {
           } else {
             dRoom.ranks.delete(args[0]);
 
-            setDRoom(dRoom, client);
+            await setDRoom(dRoom, client);
 
             client.message(args[0] + " is now rankless.");
           }
@@ -75,7 +75,7 @@ export default function (player: Player, client: Client, args: string[]) {
         if (dPlayer.rank == "bot-owner") {
           dRoom.ranks.delete(args[0]);
 
-          setDRoom(dRoom, client);
+          await setDRoom(dRoom, client);
 
           client.message(args[0] + " is now rankless.");
         }

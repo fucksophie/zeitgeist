@@ -19,19 +19,6 @@ const getDomainWithoutSubdomain = (url: string) => {
 
 export const discord = new Discord();
 
-for (let i = 0; i < localStorage.length; i++) {
-  try {
-    const player = JSON.parse(localStorage.getItem(localStorage.key(i)!)!);
-
-    if (typeof player.money == "number") {
-      player.timeouts = [];
-      localStorage.setItem(player.id, JSON.stringify(player));
-    }
-  } catch {
-    // okay who cares
-  }
-}
-
 // deno-lint-ignore no-explicit-any
 const categories = new Map<string, Map<string, any>>();
 
@@ -54,12 +41,12 @@ for await (const categoryEntry of Deno.readDir("commands")) {
 const mClient = (client: Client) => {
   client.on("connect", async () => {
     client.userset("Zeit[g]eist", "#F8F8FF");
-    let room = getDRoom(client);
+    let room = await getDRoom(client);
 
     if (!room) {
       room = { ranks: new Map() };
 
-      setDRoom({ ranks: new Map() }, client);
+      await setDRoom({ ranks: new Map() }, client);
     }
 
     if (room.discordEnabled) {
@@ -67,18 +54,17 @@ const mClient = (client: Client) => {
     }
   });
 
-  client.on("namechange", (now) => {
-    const person = getDPlayer(client, now);
-
+  client.on("namechange", async (now) => {
+    const person = await getDPlayer(client, now);
     if (person.namehistory.at(-1) !== now.name) {
       person.namehistory.push(now.name);
-      setDPlayer(person);
+      await setDPlayer(person);
     }
   });
 
-  client.on("join", (player) => {
-    if (!getDPlayer(client, player)) {
-      setDPlayer({
+  client.on("join", async (player) => {
+    if (!await getDPlayer(client, player)) {
+      await setDPlayer({
         id: client.wsUrl + player._id,
         money: 0,
         timeouts: [],
@@ -88,15 +74,15 @@ const mClient = (client: Client) => {
       });
     }
 
-    const person = getDPlayer(client, player);
+    const person = await getDPlayer(client,player);
 
     if (person.namehistory.at(-1) !== player.name) {
       person.namehistory.push(player.name);
-      setDPlayer(person);
+      await setDPlayer(person);
     }
 
     if (client.me.crown) {
-      const dRoom = getDRoom(client)!;
+      const dRoom = await getDRoom(client)!;
 
       if (dRoom.ranks.get(player._id) == "banned") {
         client.kickban(player._id, 1.8e+6);
@@ -111,13 +97,13 @@ const mClient = (client: Client) => {
 
         dRoom.ranks.delete(player._id);
         
-        setDRoom(dRoom, client);
+        await setDRoom(dRoom, client);
       }
     }
   });
 
-  client.on("message", (player: Player, message: string) => {
-    if (discord && discord.channel && getDRoom(client)?.discordEnabled) {
+  client.on("message", async (player: Player, message: string) => {
+    if (discord && discord.channel && (await getDRoom(client))?.discordEnabled) {
       if (message.startsWith("[Discord]") && player._id == client.me._id) {
         return;
       }

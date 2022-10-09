@@ -1,10 +1,10 @@
 import { Client, Player } from "../../classes/Client.ts";
 import { DatabaseRoom, getDPlayer, getDRoom } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client) {
+  const dPlayer = await getDPlayer(client, player);
 
-  const dRoom: DatabaseRoom = getDRoom(client)!;
+  const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (
     dRoom.ranks.get(player.id) == "room-owner" || dPlayer.rank == "bot-owner"

@@ -1,8 +1,8 @@
 import { Client, Player } from "../../classes/Client.ts";
 import { getDPlayer } from "../../classes/Database.ts";
 
-export default function (player: Player, client: Client, args: string[]) {
-  const dPlayer = getDPlayer(client, player);
+export default async function (player: Player, client: Client, args: string[]) {
+  const dPlayer = await getDPlayer(client, player);
 
   if (dPlayer.rank == "bot-owner") {
     try {
