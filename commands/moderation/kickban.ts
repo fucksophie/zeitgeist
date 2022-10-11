@@ -36,6 +36,11 @@ export default async function (player: Player, client: Client, args: string[]) {
       return;
     }
 
+    if(args[0] == player.id) {
+      client.message("You cannot kickban yourself!")
+      return;
+    }
+
     if (dRoom.ranks.get(args[0])?.startsWith("kickban")) {
       client.message("This user is already kickbanned.");
       return;

@@ -26,6 +26,11 @@ export default async function (player: Player, client: Client, args: string[]) {
       client.message("You cannot ban the bot!");
       return;
     }
+    
+    if(args[0] == player.id) {
+      client.message("You cannot ban yourself!")
+      return;
+    }
 
     if (
       dRoom.ranks.get(args[0]) ||
