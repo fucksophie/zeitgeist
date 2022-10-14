@@ -85,6 +85,11 @@ const rainbowIntervals: Map<string, RainbowInterval> = new Map<
 const colors = rainbow(20, "hex", false);
 
 export default async function (player: Player, client: Client) {
+  if(!client.me.crown) {
+    client.message("I don't have the crown.")
+    return;
+  }
+  
   const dPlayer = await getDPlayer(client, player);
 
   const dRoom: DatabaseRoom = await getDRoom(client)!;

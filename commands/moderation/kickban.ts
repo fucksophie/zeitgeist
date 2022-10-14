@@ -61,6 +61,11 @@ export default async function (player: Player, client: Client, args: string[]) {
     }
 
     if (user) {
+      if (!client.me.crown) {
+        client.message("I do not have the crown.");
+        return;
+      }
+      
       client.kickban(args[0], (+args[1]) * 60000);
     } else {
       client.message("Kickbanned offline user " + args[0] + ".");

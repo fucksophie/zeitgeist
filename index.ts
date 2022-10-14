@@ -6,18 +6,6 @@ import {
   setDPlayer,
   setDRoom,
 } from "./classes/Database.ts";
-import { Discord } from "./classes/Discord.ts";
-
-const getDomainWithoutSubdomain = (url: string) => {
-  const urlParts = new URL(url).hostname.split(".");
-
-  return urlParts
-    .slice(0)
-    .slice(-(urlParts.length === 4 ? 3 : 2))
-    .join(".");
-};
-
-export const discord = new Discord();
 
 // deno-lint-ignore no-explicit-any
 const categories = new Map<string, Map<string, any>>();
@@ -40,17 +28,15 @@ for await (const categoryEntry of Deno.readDir("commands")) {
 
 const mClient = (client: Client) => {
   client.on("connect", async () => {
-    client.userset("Zeit[g]eist", "#F8F8FF");
+    const username = config?.user?.name || "Zeit[g]eist";
+    const color = config?.user?.color || "#F8F8FF";
+    client.userset(username, color);
     let room = await getDRoom(client);
 
     if (!room) {
       room = { ranks: new Map() };
 
       await setDRoom({ ranks: new Map() }, client);
-    }
-
-    if (room.discordEnabled) {
-      await discord.makeNewBridge(client);
     }
   });
 
@@ -61,6 +47,24 @@ const mClient = (client: Client) => {
       await setDPlayer(person);
     }
   });
+
+  client.on("channelSent", x => {
+    if(!x.crown?.participantId) {
+      const timeLeft = 15000 - (Date.now() - x.crown.time);
+    
+      console.log(`[${client.channel}] Crown dropped. Picking up in ${timeLeft}ms.`)
+    
+      setTimeout(() => {
+        console.log(`[${client.channel}] Attempting pickup..`)
+        client.giveCrown(client.me._id);
+
+        setTimeout(() => {
+          if(client.me.crown) console.log(`[${client.channel}] Good job! Crown gotten.`)
+        }, 1000)
+      
+      }, timeLeft)
+    }
+  })
 
   client.on("join", async (player) => {
     if (!await getDPlayer(client, player)) {
@@ -102,26 +106,16 @@ const mClient = (client: Client) => {
     }
   });
 
-  client.on("message", async (player: Player, message: string) => {
-    if (discord && discord.channel && (await getDRoom(client))?.discordEnabled) {
-      if (message.startsWith("[Discord]") && player._id == client.me._id) {
-        return;
-      }
-      discord.buffer.push(
-        `**${player.name}** (${player._id}): ${message} || ${client.channel} in ${
-          getDomainWithoutSubdomain(client.wsUrl)
-        } ||`,
-      );
-    }
-
+  client.on("message", (player: Player, message: string) => {
     const args = message.split(" ");
     const command = args.shift();
+    const prefix = config?.user?.prefix || "g";
 
-    if (command?.startsWith("g")) {
+    if (command?.startsWith(prefix)) {
       categories.forEach(async (v) => {
-        const cc = v.get(command.substring(1));
+        const cc = v.get(command.substring(prefix.length));
 
-        if (cc) await cc(player, client, args, categories, discord);
+        if (cc) await cc(player, client, args, categories);
       });
     }
   });

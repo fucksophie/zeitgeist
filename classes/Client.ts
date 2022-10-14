@@ -1,5 +1,25 @@
 import { EventEmitter } from "https://deno.land/x/eventemitter@1.2.1/mod.ts";
 
+export class Channel {
+  settings!: ChannelSettings
+  _id!: string
+  id!: string
+  count!: number
+  crown!: {
+    endPos: {
+      x: number,
+      y: number
+    },
+    startPos: {
+      x: number,
+      y: number
+    }
+    userId?: string
+    time: number
+    participantId?: string
+  }
+}
+
 export class Player {
   id!: string;
   _id!: string;
@@ -34,6 +54,8 @@ export class Client extends EventEmitter<{
   join(player: Player): void;
   mouse(x: number, y: number, id: string): void;
   namechange(now: Player, before: Player): void;
+  channelSent(channel: Channel): void;
+
 }> {
   wsUrl!: string;
   ws!: WebSocket;
@@ -73,7 +95,7 @@ export class Client extends EventEmitter<{
   }
 
   message(message: string) {
-    message.match(/.{1,450}/g)?.forEach((x) => {
+    (message).match(/.{1,450}/g)?.forEach((x) => {
       this.messageBuffer.push(x);
     });
   }
@@ -171,6 +193,8 @@ export class Client extends EventEmitter<{
           this.send({ m: "ch", "_id": channel });
           this.me = message.u;
         } else if (message.m == "ch") {
+          this.emit("channelSent", message.ch);
+
           if (this.people.length == 0) {
             this.emit("connect");
           }

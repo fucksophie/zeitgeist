@@ -5,28 +5,18 @@ import {
   getDRoom,
   setDRoom,
 } from "../../classes/Database.ts";
-import { Discord } from "../../classes/Discord.ts";
 
 export default async function (
   player: Player,
   client: Client,
   __: unknown,
   _: unknown,
-  discord: Discord,
 ) {
   const dPlayer = await getDPlayer(client, player);
 
   const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (dPlayer.rank == "bot-owner") {
-    if (dRoom.discordEnabled) {
-      dRoom.discordEnabled = false;
-      discord.clients = discord.clients.filter((e) => e.ws !== client.ws);
-    } else {
-      dRoom.discordEnabled = true;
-      await discord.makeNewBridge(client);
-    }
-
     await setDRoom(dRoom, client);
     client.message(
       "Discord is now: " + (dRoom.discordEnabled ? "Enabled." : "Disabled."),

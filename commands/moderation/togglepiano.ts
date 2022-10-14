@@ -2,6 +2,11 @@ import { Client, Player } from "../../classes/Client.ts";
 import { DatabaseRoom, getDPlayer, getDRoom } from "../../classes/Database.ts";
 
 export default async function (player: Player, client: Client) {
+  if (!client.me.crown) {
+    client.message("I do not have the crown.");
+    return;
+  }
+
   const dPlayer = await getDPlayer(client, player);
 
   const dRoom: DatabaseRoom = await getDRoom(client)!;
