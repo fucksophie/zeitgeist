@@ -17,6 +17,9 @@ export default async function (
   const dRoom: DatabaseRoom = await getDRoom(client)!;
 
   if (dPlayer.rank == "bot-owner") {
+
+    dRoom.discordEnabled = !dRoom.discordEnabled;
+    
     await setDRoom(dRoom, client);
     client.message(
       "Discord is now: " + (dRoom.discordEnabled ? "Enabled." : "Disabled."),
